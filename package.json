@@ -1,0 +1,18 @@
+{
+    "id": "ld-select",
+    "name": "下拉框多选、单选",
+    "displayName": "下拉框多选、单选",
+    "version": "1.0.8",
+    "description": "下拉多选 下拉单选",
+    "keywords": [
+        "select",
+        "下拉框",
+        "下拉多选"
+    ],
+    "dcloudext": {
+        "category": [
+            "前端组件",
+            "通用组件"
+        ]
+    }
+}
