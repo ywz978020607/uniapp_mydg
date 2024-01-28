@@ -240,7 +240,7 @@ export default {
 									for (var idx=0; idx < res.data["data"]["devices"].length; idx++){
 										var device_data = res.data["data"]["devices"][idx];
 										if (device_data["online"] == false){
-											temp_data["+"+device_data["id"]]["status"] = "离线";
+											temp_data["+"+device_data["id"]]["status"] = ""; //离线
 										}
 									}
 								}
@@ -283,7 +283,7 @@ export default {
 									for (var idx=0; idx < res.data["data"]["devices"].length; idx++){
 										var device_data = res.data["data"]["devices"][idx];
 										if (device_data["online"] == false){
-											temp_data["+"+device_data["id"]]["status"] = "离线";
+											temp_data["+"+device_data["id"]]["status"] = ""; //离线
 										}
 									}
 								}

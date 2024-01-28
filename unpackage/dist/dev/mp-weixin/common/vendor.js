@@ -1524,7 +1524,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"NODE_ENV":"development","VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"摸鱼大鸽物联网","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"摸鱼大鸽物联网","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -8878,7 +8878,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"NODE_ENV":"development","VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"摸鱼大鸽物联网","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"摸鱼大鸽物联网","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -8899,14 +8899,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"NODE_ENV":"development","VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"摸鱼大鸽物联网","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"摸鱼大鸽物联网","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"NODE_ENV":"development","VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"摸鱼大鸽物联网","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"摸鱼大鸽物联网","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -9002,7 +9002,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = this.$shouldDiffData === false ? data : diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"NODE_ENV":"development","VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"摸鱼大鸽物联网","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_DARK_MODE":"false","VUE_APP_NAME":"摸鱼大鸽物联网","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -9420,9 +9420,9 @@ internalMixin(Vue);
 
 /***/ }),
 /* 26 */
-/*!*************************************************!*\
-  !*** C:/Users/W/Desktop/uniapp_mydg/pages.json ***!
-  \*************************************************/
+/*!****************************************!*\
+  !*** D:/folder/uniapp_mydg/pages.json ***!
+  \****************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -9563,9 +9563,9 @@ function normalizeComponent (
 
 /***/ }),
 /* 33 */
-/*!******************************************************!*\
-  !*** C:/Users/W/Desktop/uniapp_mydg/static/share.js ***!
-  \******************************************************/
+/*!*********************************************!*\
+  !*** D:/folder/uniapp_mydg/static/share.js ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9622,9 +9622,9 @@ exports.default = _default;
 /* 38 */,
 /* 39 */,
 /* 40 */
-/*!***********************************************************!*\
-  !*** C:/Users/W/Desktop/uniapp_mydg/pages/index/index.js ***!
-  \***********************************************************/
+/*!**************************************************!*\
+  !*** D:/folder/uniapp_mydg/pages/index/index.js ***!
+  \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9921,7 +9921,7 @@ var _default = {
                 for (var idx = 0; idx < res.data["data"]["devices"].length; idx++) {
                   var device_data = res.data["data"]["devices"][idx];
                   if (device_data["online"] == false) {
-                    temp_data["+" + device_data["id"]]["status"] = "离线";
+                    temp_data["+" + device_data["id"]]["status"] = ""; //离线
                   }
                 }
               }
@@ -9970,7 +9970,7 @@ var _default = {
                 for (var idx = 0; idx < res.data["data"]["devices"].length; idx++) {
                   var device_data = res.data["data"]["devices"][idx];
                   if (device_data["online"] == false) {
-                    temp_data["+" + device_data["id"]]["status"] = "离线";
+                    temp_data["+" + device_data["id"]]["status"] = ""; //离线
                   }
                 }
               }
@@ -10735,9 +10735,9 @@ exports.default = _default;
 
 /***/ }),
 /* 41 */
-/*!*************************************************************!*\
-  !*** C:/Users/W/Desktop/uniapp_mydg/static/WSCoordinate.js ***!
-  \*************************************************************/
+/*!****************************************************!*\
+  !*** D:/folder/uniapp_mydg/static/WSCoordinate.js ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10896,9 +10896,9 @@ module.exports = {
 /* 47 */,
 /* 48 */,
 /* 49 */
-/*!*******************************************************************************************************************!*\
-  !*** C:/Users/W/Desktop/uniapp_mydg/uni_modules/uni-datetime-picker/components/uni-datetime-picker/i18n/index.js ***!
-  \*******************************************************************************************************************/
+/*!**********************************************************************************************************!*\
+  !*** D:/folder/uniapp_mydg/uni_modules/uni-datetime-picker/components/uni-datetime-picker/i18n/index.js ***!
+  \**********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10922,9 +10922,9 @@ exports.default = _default;
 
 /***/ }),
 /* 50 */
-/*!******************************************************************************************************************!*\
-  !*** C:/Users/W/Desktop/uniapp_mydg/uni_modules/uni-datetime-picker/components/uni-datetime-picker/i18n/en.json ***!
-  \******************************************************************************************************************/
+/*!*********************************************************************************************************!*\
+  !*** D:/folder/uniapp_mydg/uni_modules/uni-datetime-picker/components/uni-datetime-picker/i18n/en.json ***!
+  \*********************************************************************************************************/
 /*! exports provided: uni-datetime-picker.selectDate, uni-datetime-picker.selectTime, uni-datetime-picker.selectDateTime, uni-datetime-picker.startDate, uni-datetime-picker.endDate, uni-datetime-picker.startTime, uni-datetime-picker.endTime, uni-datetime-picker.ok, uni-datetime-picker.clear, uni-datetime-picker.cancel, uni-datetime-picker.year, uni-datetime-picker.month, uni-calender.MON, uni-calender.TUE, uni-calender.WED, uni-calender.THU, uni-calender.FRI, uni-calender.SAT, uni-calender.SUN, uni-calender.confirm, default */
 /***/ (function(module) {
 
@@ -10932,9 +10932,9 @@ module.exports = JSON.parse("{\"uni-datetime-picker.selectDate\":\"select date\"
 
 /***/ }),
 /* 51 */
-/*!***********************************************************************************************************************!*\
-  !*** C:/Users/W/Desktop/uniapp_mydg/uni_modules/uni-datetime-picker/components/uni-datetime-picker/i18n/zh-Hans.json ***!
-  \***********************************************************************************************************************/
+/*!**************************************************************************************************************!*\
+  !*** D:/folder/uniapp_mydg/uni_modules/uni-datetime-picker/components/uni-datetime-picker/i18n/zh-Hans.json ***!
+  \**************************************************************************************************************/
 /*! exports provided: uni-datetime-picker.selectDate, uni-datetime-picker.selectTime, uni-datetime-picker.selectDateTime, uni-datetime-picker.startDate, uni-datetime-picker.endDate, uni-datetime-picker.startTime, uni-datetime-picker.endTime, uni-datetime-picker.ok, uni-datetime-picker.clear, uni-datetime-picker.cancel, uni-datetime-picker.year, uni-datetime-picker.month, uni-calender.SUN, uni-calender.MON, uni-calender.TUE, uni-calender.WED, uni-calender.THU, uni-calender.FRI, uni-calender.SAT, uni-calender.confirm, default */
 /***/ (function(module) {
 
@@ -10942,9 +10942,9 @@ module.exports = JSON.parse("{\"uni-datetime-picker.selectDate\":\"选择日期\
 
 /***/ }),
 /* 52 */
-/*!***********************************************************************************************************************!*\
-  !*** C:/Users/W/Desktop/uniapp_mydg/uni_modules/uni-datetime-picker/components/uni-datetime-picker/i18n/zh-Hant.json ***!
-  \***********************************************************************************************************************/
+/*!**************************************************************************************************************!*\
+  !*** D:/folder/uniapp_mydg/uni_modules/uni-datetime-picker/components/uni-datetime-picker/i18n/zh-Hant.json ***!
+  \**************************************************************************************************************/
 /*! exports provided: uni-datetime-picker.selectDate, uni-datetime-picker.selectTime, uni-datetime-picker.selectDateTime, uni-datetime-picker.startDate, uni-datetime-picker.endDate, uni-datetime-picker.startTime, uni-datetime-picker.endTime, uni-datetime-picker.ok, uni-datetime-picker.clear, uni-datetime-picker.cancel, uni-datetime-picker.year, uni-datetime-picker.month, uni-calender.SUN, uni-calender.MON, uni-calender.TUE, uni-calender.WED, uni-calender.THU, uni-calender.FRI, uni-calender.SAT, uni-calender.confirm, default */
 /***/ (function(module) {
 
@@ -10952,9 +10952,9 @@ module.exports = JSON.parse("{\"uni-datetime-picker.selectDate\":\"選擇日期\
 
 /***/ }),
 /* 53 */
-/*!*************************************************************************************************************!*\
-  !*** C:/Users/W/Desktop/uniapp_mydg/uni_modules/uni-datetime-picker/components/uni-datetime-picker/util.js ***!
-  \*************************************************************************************************************/
+/*!****************************************************************************************************!*\
+  !*** D:/folder/uniapp_mydg/uni_modules/uni-datetime-picker/components/uni-datetime-picker/util.js ***!
+  \****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11404,9 +11404,9 @@ function fixIosDateFormat(value) {
 /* 59 */,
 /* 60 */,
 /* 61 */
-/*!********************************************************************************************************************!*\
-  !*** C:/Users/W/Desktop/uniapp_mydg/uni_modules/uni-data-picker/components/uni-data-pickerview/uni-data-picker.js ***!
-  \********************************************************************************************************************/
+/*!***********************************************************************************************************!*\
+  !*** D:/folder/uniapp_mydg/uni_modules/uni-data-picker/components/uni-data-pickerview/uni-data-picker.js ***!
+  \***********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12512,7 +12512,7 @@ var y = "development" === "development",
 var S;
 S = "h5" === _ ? "web" : "app-plus" === _ ? "app" : _;
 var k = m(undefined),
-  I = m(undefined) || [],
+  I = m([]) || [],
   b = true;
 var T = "";
 try {
@@ -19486,9 +19486,9 @@ module.exports = _isNativeFunction, module.exports.__esModule = true, module.exp
 
 /***/ }),
 /* 72 */
-/*!******************************************************************************!*\
-  !*** C:/Users/W/Desktop/uniapp_mydg/pages.json?{"type":"origin-pages-json"} ***!
-  \******************************************************************************/
+/*!*********************************************************************!*\
+  !*** D:/folder/uniapp_mydg/pages.json?{"type":"origin-pages-json"} ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19527,9 +19527,9 @@ exports.default = _default;
 
 /***/ }),
 /* 73 */
-/*!*****************************************************************!*\
-  !*** C:/Users/W/Desktop/uniapp_mydg/pages.json?{"type":"stat"} ***!
-  \*****************************************************************/
+/*!********************************************************!*\
+  !*** D:/folder/uniapp_mydg/pages.json?{"type":"stat"} ***!
+  \********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19561,9 +19561,9 @@ exports.default = _default;
 /* 86 */,
 /* 87 */,
 /* 88 */
-/*!******************************************************************************************!*\
-  !*** C:/Users/W/Desktop/uniapp_mydg/uni_modules/uni-icons/components/uni-icons/icons.js ***!
-  \******************************************************************************************/
+/*!*********************************************************************************!*\
+  !*** D:/folder/uniapp_mydg/uni_modules/uni-icons/components/uni-icons/icons.js ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20603,9 +20603,9 @@ exports.default = _default;
 /* 108 */,
 /* 109 */,
 /* 110 */
-/*!*******************************************************************************************************!*\
-  !*** C:/Users/W/Desktop/uniapp_mydg/uni_modules/uni-load-more/components/uni-load-more/i18n/index.js ***!
-  \*******************************************************************************************************/
+/*!**********************************************************************************************!*\
+  !*** D:/folder/uniapp_mydg/uni_modules/uni-load-more/components/uni-load-more/i18n/index.js ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20629,9 +20629,9 @@ exports.default = _default;
 
 /***/ }),
 /* 111 */
-/*!******************************************************************************************************!*\
-  !*** C:/Users/W/Desktop/uniapp_mydg/uni_modules/uni-load-more/components/uni-load-more/i18n/en.json ***!
-  \******************************************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** D:/folder/uniapp_mydg/uni_modules/uni-load-more/components/uni-load-more/i18n/en.json ***!
+  \*********************************************************************************************/
 /*! exports provided: uni-load-more.contentdown, uni-load-more.contentrefresh, uni-load-more.contentnomore, default */
 /***/ (function(module) {
 
@@ -20639,9 +20639,9 @@ module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"Pull up to show mo
 
 /***/ }),
 /* 112 */
-/*!***********************************************************************************************************!*\
-  !*** C:/Users/W/Desktop/uniapp_mydg/uni_modules/uni-load-more/components/uni-load-more/i18n/zh-Hans.json ***!
-  \***********************************************************************************************************/
+/*!**************************************************************************************************!*\
+  !*** D:/folder/uniapp_mydg/uni_modules/uni-load-more/components/uni-load-more/i18n/zh-Hans.json ***!
+  \**************************************************************************************************/
 /*! exports provided: uni-load-more.contentdown, uni-load-more.contentrefresh, uni-load-more.contentnomore, default */
 /***/ (function(module) {
 
@@ -20649,9 +20649,9 @@ module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"上拉显示更多
 
 /***/ }),
 /* 113 */
-/*!***********************************************************************************************************!*\
-  !*** C:/Users/W/Desktop/uniapp_mydg/uni_modules/uni-load-more/components/uni-load-more/i18n/zh-Hant.json ***!
-  \***********************************************************************************************************/
+/*!**************************************************************************************************!*\
+  !*** D:/folder/uniapp_mydg/uni_modules/uni-load-more/components/uni-load-more/i18n/zh-Hant.json ***!
+  \**************************************************************************************************/
 /*! exports provided: uni-load-more.contentdown, uni-load-more.contentrefresh, uni-load-more.contentnomore, default */
 /***/ (function(module) {
 
