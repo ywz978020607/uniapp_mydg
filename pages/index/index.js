@@ -60,7 +60,7 @@ export default {
 			temp_data: {},
 			//#ifndef H5
 			direction: "https://iot-api.heclouds.com", // "http://183.230.40.34"
-			direction_old: "https://api.heclouds.com",
+			direction_old: "https://api.heclouds.com", // 183.230.40.33
 			mybackend: "http://127.0.0.1:8880/openapi",
 			//#endif
 			//#ifdef H5
