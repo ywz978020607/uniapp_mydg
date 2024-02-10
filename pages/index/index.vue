@@ -6,7 +6,7 @@
 	                    <li><a href="#">欢迎</a></li>
 	                </ul>
 	               <ul class="rt">
-						<li>摸鱼大鸽: 无三方后端，直连中国移动</li>
+						<li>摸鱼大鸽@bilibili v3.1.1</li>
 	                </ul>
 	            </div>
 	        </header> -->
@@ -51,7 +51,7 @@
 										<div v-if="data_each['id'].slice(0,4)=='data'" style="display: flex;flex-direction: column;align-items: center;">
 											<p>键值{{data_each["id"]}}: {{data_each["value"]}} {{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
 											<!-- <span v-html="'<br>'"></span>  -->
-											<button class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_off');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "触低发送")}}</button>
+											<button v-if="check_seen_status(key.substr(1,),data_each['id'], 't_off')" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_off');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "触低发送")}}</button>
 										</div>
 									</div>
 								</div>
@@ -92,13 +92,10 @@
 											<p v-if="data_each['value']=='1'" style="font-size: 60rpx;color: blue;">{{data_each["id"].slice(4,)}} 开启</p>
 											<p>{{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
 											 <div class="flex" style="white-space: pre-wrap;">
-												 <button style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 'on');delay_fresh();">开启</button>
-												 <span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
-												 <button style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 'off');delay_fresh();">关闭</button>
-												 <span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
-												<!-- <div v-if="(data_index+1) % 3 == 0">
-													<span v-html="'<br>'"></span>
-												</div> -->
+												 <button v-if="check_seen_status(key.substr(1,),data_each['id'], 'on')" style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 'on');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "开启")}}</button>
+												 <span v-if="check_seen_status(key.substr(1,),data_each['id'], 'on')" v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
+												 <button v-if="check_seen_status(key.substr(1,),data_each['id'], 'off')" style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 'off');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "关闭")}}</button>
+												 <span v-if="check_seen_status(key.substr(1,),data_each['id'], 'off')" v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
 											 </div>
 										 </div>
 										 <!-- <span v-html="'<br>'"></span> -->
@@ -109,13 +106,10 @@
 									<div v-for="(data_each,data_index) in each.datastreams" :obj="data_each.id" style="display: flex;flex-direction: column;align-items: center;">
 										<div v-if="data_each['id'].slice(0,4)=='data'" style="display: flex;flex-direction: column;align-items: center;">
 											<p>键值{{data_each["id"]}}: {{data_each["value"]}} at: {{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
-											 <div class="flex" style="white-space: pre-wrap;">
+											 <div v-if="check_seen_status(key.substr(1,), data_each['id'], 't_on')" class="flex" style="white-space: pre-wrap;">
 											 	<span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
 												<button v-if="data_index/2==0" style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_on');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "打开开关")}}</button>
 												<button v-else style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_on');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "关闭开关")}}</button>
-												<!-- <div v-if="(data_index+1) % 3 == 0">
-													<span v-html="'<br>'"></span>
-												</div> -->
 											 </div>
 										 </div>
 										 <!-- <span v-html="'<br>'"></span> -->
@@ -126,13 +120,10 @@
 									<div v-for="(data_each,data_index) in each.datastreams" :obj="data_each.id" style="display: flex;flex-direction: column;align-items: center;">
 										<div v-if="data_each['id'].slice(0,4)=='data'" style="display: flex;flex-direction: column;align-items: center;">
 											<p>键值{{data_each["id"]}}: {{data_each["value"]}} at: {{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
-											 <div class="flex" style="white-space: pre-wrap;">
+											 <div v-if="check_seen_status(key.substr(1,),data_each['id'], 't_off')" class="flex" style="white-space: pre-wrap;">
 												 <span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
 												 <button v-if="data_index/2==0" style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_off');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "打开开关")}}</button>
 												 <button v-else style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_off');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "关闭开关")}}</button>
-												<!-- <div v-if="(data_index+1) % 3 == 0">
-													<span v-html="'<br>'"></span>
-												</div> -->
 											 </div>
 										 </div>
 										 <!-- <span v-html="'<br>'"></span> -->
@@ -311,7 +302,7 @@
 							<span v-html="'<br>'"></span>
 							<text class="flex flex-direction" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
 								暂不接受捐赠，您的bilibili点赞/关注是作者开发的动力~
-								version: 2024-0128
+								version: 2024-0210
 							</text>
 						</div>
 
