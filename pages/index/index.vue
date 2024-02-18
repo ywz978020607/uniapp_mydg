@@ -32,7 +32,11 @@
 									<div v-for="(data_each,data_index) in each.datastreams" :obj="data_each.id" style="display: flex;flex-direction: column;align-items: center;">
 										<div v-if="data_each['id'].slice(0,4)=='data' " style="display: flex;flex-direction: column;align-items: center;">
 											<p>键值{{data_each["id"]}}: {{data_each["value"]}} at: {{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
-											 <div class="flex" style="white-space: pre-wrap;">
+											<div v-if="check_in_show(key.substr(1,),data_each['id'])!=null">
+												 <p v-if="data_each['value']==check_in_show(key.substr(1,),data_each['id'])" style="font-size: 60rpx;color: red;"> {{load_config_show(key.substr(1,),data_each['id'], "已开启")}}</p>
+												 <p v-else style="font-size: 60rpx;color: blue;"> {{load_config_show(key.substr(1,),data_each['id'], "已关闭")}}</p>
+											</div>
+											 <div v-else class="flex" style="white-space: pre-wrap;">
 												 <button v-if="check_seen_status(key.substr(1,),data_each['id'], 'on')" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 'on');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "常高")}}</button>
 												 <span v-if="check_seen_status(key.substr(1,),data_each['id'], 'on')" v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
 												 <button v-if="check_seen_status(key.substr(1,),data_each['id'], 'off')" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 'off');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "常低")}}</button>
@@ -51,26 +55,18 @@
 										<div v-if="data_each['id'].slice(0,4)=='data'" style="display: flex;flex-direction: column;align-items: center;">
 											<p>键值{{data_each["id"]}}: {{data_each["value"]}} {{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
 											<!-- <span v-html="'<br>'"></span>  -->
-											<button v-if="check_seen_status(key.substr(1,),data_each['id'], 't_off')" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_off');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "触低发送")}}</button>
+											<div v-if="check_in_show(key.substr(1,),data_each['id'])!=null">
+												 <p v-if="data_each['value']==check_in_show(key.substr(1,),data_each['id'])" style="font-size: 60rpx;color: red;"> {{load_config_show(key.substr(1,),data_each['id'], "已开启")}}</p>
+												 <p v-else style="font-size: 60rpx;color: blue;"> {{load_config_show(key.substr(1,),data_each['id'], "已关闭")}}</p>
+											</div>
+											<div v-else>
+												<button v-if="check_seen_status(key.substr(1,),data_each['id'], 't_off')" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_off');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "触低发送")}}</button>
+											</div>
 										</div>
 									</div>
 								</div>
 								<!-- 红外控制 -->
 								<!-- <div v-if="each['device_type'] == 2">
-									<div v-for="(data_each,data_index) in each.datastreams" :obj="data_each.id" style="display: flex;flex-direction: column;align-items: center;">
-										<p>键值{{data_each["id"]}}: {{data_each["value"]}} at: {{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
-										 <div class="flex" style="white-space: pre-wrap;">
-											 <button class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 'on')">常高</button>
-											 <span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
-											 <button class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 'off')">常低</button>
-											 <span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
-											 <button class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_on')">触高</button>
-											 <span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
-											 <button class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_off')">触低</button>
-										 </div>
-										 <span v-html="'<br>'"></span>
-									</div>
-
 									<div class="flex" style="display: flex;flex-direction: column;align-items: center;">
 										<p>红外控制</p>
 									</div>
@@ -88,8 +84,8 @@
 								<div v-if="each['device_type'] == 'relay'">
 									<div v-for="(data_each,data_index) in each.datastreams" :obj="data_each.id" style="display: flex;flex-direction: column;align-items: center;">
 										<div v-if="data_each['id'].slice(0,4)=='data'" style="display: flex;flex-direction: column;align-items: center;">
-											<p v-if="data_each['value']=='0'" style="font-size: 60rpx;color: red;">{{data_each["id"].slice(4,)}} 关闭</p>
-											<p v-if="data_each['value']=='1'" style="font-size: 60rpx;color: blue;">{{data_each["id"].slice(4,)}} 开启</p>
+											<p v-if="data_each['value']=='0'" style="font-size: 60rpx;color: blue;">{{data_each["id"].slice(4,)}} 关闭</p>
+											<p v-if="data_each['value']=='1'" style="font-size: 60rpx;color: red;">{{data_each["id"].slice(4,)}} 开启</p>
 											<p>{{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
 											 <div class="flex" style="white-space: pre-wrap;">
 												 <button v-if="check_seen_status(key.substr(1,),data_each['id'], 'on')" style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 'on');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "开启")}}</button>
@@ -106,7 +102,11 @@
 									<div v-for="(data_each,data_index) in each.datastreams" :obj="data_each.id" style="display: flex;flex-direction: column;align-items: center;">
 										<div v-if="data_each['id'].slice(0,4)=='data'" style="display: flex;flex-direction: column;align-items: center;">
 											<p>键值{{data_each["id"]}}: {{data_each["value"]}} at: {{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
-											 <div v-if="check_seen_status(key.substr(1,), data_each['id'], 't_on')" class="flex" style="white-space: pre-wrap;">
+											 <div v-if="check_in_show(key.substr(1,),data_each['id'])!=null">
+												 <p v-if="data_each['value']==check_in_show(key.substr(1,),data_each['id'])" style="font-size: 60rpx;color: red;"> {{load_config_show(key.substr(1,),data_each['id'], "已开启")}}</p>
+												 <p v-else style="font-size: 60rpx;color: blue;"> {{load_config_show(key.substr(1,),data_each['id'], "已关闭")}}</p>
+											 </div>
+											 <div v-else-if="check_seen_status(key.substr(1,), data_each['id'], 't_on')" class="flex" style="white-space: pre-wrap;">
 											 	<span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
 												<button v-if="data_index/2==0" style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_on');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "打开开关")}}</button>
 												<button v-else style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_on');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "关闭开关")}}</button>
@@ -120,7 +120,11 @@
 									<div v-for="(data_each,data_index) in each.datastreams" :obj="data_each.id" style="display: flex;flex-direction: column;align-items: center;">
 										<div v-if="data_each['id'].slice(0,4)=='data'" style="display: flex;flex-direction: column;align-items: center;">
 											<p>键值{{data_each["id"]}}: {{data_each["value"]}} at: {{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
-											 <div v-if="check_seen_status(key.substr(1,),data_each['id'], 't_off')" class="flex" style="white-space: pre-wrap;">
+											 <div v-if="check_in_show(key.substr(1,),data_each['id'])!=null">
+												 <p v-if="data_each['value']==check_in_show(key.substr(1,),data_each['id'])" style="font-size: 60rpx;color: red;"> {{load_config_show(key.substr(1,),data_each['id'], "已开启")}}</p>
+												 <p v-else style="font-size: 60rpx;color: blue;"> {{load_config_show(key.substr(1,),data_each['id'], "已关闭")}}</p>
+											 </div>
+											 <div v-else-if="check_seen_status(key.substr(1,),data_each['id'], 't_off')" class="flex" style="white-space: pre-wrap;">
 												 <span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
 												 <button v-if="data_index/2==0" style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_off');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "打开开关")}}</button>
 												 <button v-else style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_off');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "关闭开关")}}</button>
@@ -302,7 +306,7 @@
 							<span v-html="'<br>'"></span>
 							<text class="flex flex-direction" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
 								暂不接受捐赠，您的bilibili点赞/关注是作者开发的动力~
-								version: 2024-0210
+								version: 2024-0218
 							</text>
 						</div>
 

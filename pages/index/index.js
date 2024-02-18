@@ -509,6 +509,16 @@ export default {
 				// }
 				return true;
 			},
+			check_in_show(device_id, key_name){
+				var res = null;
+				if ((((this.config_json[device_id] || {})["inp"] || {})[key_name]) != null) {
+					res = (((this.config_json[device_id] || {})["inp"] || {})[key_name]);
+				}
+				if((((this.config_json["*"] || {})["inp"] || {})[key_name]) != null) {
+					res = (((this.config_json["*"] || {})["inp"] || {})[key_name]);
+				}
+				return res;
+			},
 			// 加载缓存
 			load_storage(){
 				var that = this;
