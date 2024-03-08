@@ -306,7 +306,7 @@ export default {
 										});
 										// 删除隐藏pin
 										for(var n = device_data["datastreams"].length-1 ; n>=0 ; n--){
-											if(!that.check_seen_status(device_data["title"], device_data["datastreams"][n]["id"])) device_data["datastreams"].splice(n,1);
+											if(!that.check_seen_status(device_data["id"], device_data["datastreams"][n]["id"])) device_data["datastreams"].splice(n,1);
 										};
 										// 坐标转换
 										for (var in_idx = 0; in_idx < device_data["datastreams"].length;in_idx++){
@@ -332,7 +332,7 @@ export default {
 												}
 												// 额外获取离线数据 k-v
 												uni.request({
-													url: that.direction_old + "/devices/1097281683/datapoints?datastream_id=st%"+that.product_id+"%"+device_data["title"]+"&limit=1",
+													url: that.direction_old + "/devices/1097281683/datapoints?datastream_id=st%"+that.product_id+"%"+device_data["id"]+"&limit=1",
 													header: { "api-key": "CSwWZsNXKRVJz=XUMES=qfO7p8Q="},
 													method:'GET',
 													success: res_old => {
@@ -344,7 +344,7 @@ export default {
 												});
 											}
 										}
-										temp_data["+"+device_data["title"]]["datastreams"] = device_data["datastreams"];
+										temp_data["+"+device_data["id"]]["datastreams"] = device_data["datastreams"];
 									}
 								}
 							});
@@ -365,7 +365,7 @@ export default {
 										});
 										// 删除隐藏pin
 										for(var n = device_data["datastreams"].length-1 ; n>=0 ; n--){
-											if(!that.check_seen_status(device_data["title"], device_data["datastreams"][n]["id"])) device_data["datastreams"].splice(n,1);
+											if(!that.check_seen_status(device_data["id"], device_data["datastreams"][n]["id"])) device_data["datastreams"].splice(n,1);
 										};
 										// 坐标转换
 										for (var in_idx = 0; in_idx < device_data["datastreams"].length;in_idx++){
