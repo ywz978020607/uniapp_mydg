@@ -51,12 +51,15 @@ export default {
 			info_dump: '',
 			input_val: [null, null, null, null,
 				null, null, 5, null,
-				null, null, ""], //初始化, null可缺省
+				null, null, "", ""], //初始化, null可缺省
 			// 0-设备ids，1-备注，2-apikey，3-触发秒数，4-hidusbid, [5-hidusb文本，6-hidusb速度]
 			// 7-类型[0-全IO,1-剪裁IO,2-红外控制,3-地图类型, 4-地图类型定时工作版]，
-			// 8-产品id, 9-补充配置的字符串输入, 10-邮箱号
+			// 8-产品id, 9-补充配置的字符串输入, 10-邮箱号, 11-PIN码
 			config_json: {}, // 补充配置
 			emails: "",
+			pincode: "",
+			res_pincode: "",
+			
 			temp_data: {},
 			//#ifndef H5
 			direction: "https://iot-api.heclouds.com", // "http://183.230.40.34"
@@ -207,6 +210,7 @@ export default {
 				var devices_type = that.device_type.split(",");
 				var hid_usb_split = that.hid_usb.split(",");
 				var temp_data = {};
+				that.res_pincode = "";
 
 				try{
 					// WIFI-HID类型只查询在线状态
@@ -308,8 +312,26 @@ export default {
 										for(var n = device_data["datastreams"].length-1 ; n>=0 ; n--){
 											if(!that.check_seen_status(device_data["id"], device_data["datastreams"][n]["id"])) device_data["datastreams"].splice(n,1);
 										};
-										// 坐标转换
+										// 更新pin码、 坐标转换
 										for (var in_idx = 0; in_idx < device_data["datastreams"].length;in_idx++){
+											if(device_data["datastreams"][in_idx]["id"] == "pwd"){
+												var tmp_pwd = device_data["datastreams"][in_idx]["value"].toString();
+												// console.log("recv pwd", tmp_pwd)
+												if(tmp_pwd != "" && tmp_pwd != "0" && that.res_pincode != "None"){
+													if(that.res_pincode == ""){
+														that.res_pincode = tmp_pwd;
+													}
+													else if(that.res_pincode != tmp_pwd){
+														that.res_pincode = "None";
+													}
+													// 相等时不需要再赋值
+													
+													if(that.pincode != tmp_pwd || that.res_pincode == "None"){
+														device_data["datastreams"] = []
+														return;
+													}
+												}
+											}
 											if(device_data["datastreams"][in_idx]["id"] == "location"){
 												var translate_coor = that.translate_gps(device_data["datastreams"][in_idx]["value"]["lat"], device_data["datastreams"][in_idx]["value"]["lon"]);
 												device_data["datastreams"][in_idx]["value"]["lat"] = translate_coor.latitude;
@@ -367,8 +389,26 @@ export default {
 										for(var n = device_data["datastreams"].length-1 ; n>=0 ; n--){
 											if(!that.check_seen_status(device_data["id"], device_data["datastreams"][n]["id"])) device_data["datastreams"].splice(n,1);
 										};
-										// 坐标转换
+										// 更新pin码、坐标转换
 										for (var in_idx = 0; in_idx < device_data["datastreams"].length;in_idx++){
+											if(device_data["datastreams"][in_idx]["id"] == "pwd"){
+												var tmp_pwd = device_data["datastreams"][in_idx]["value"].toString();
+												// console.log("recv pwd", tmp_pwd)
+												if(tmp_pwd != "" && tmp_pwd != "0" && that.res_pincode != "None"){
+													if(that.res_pincode == ""){
+														that.res_pincode = tmp_pwd;
+													}
+													else if(that.res_pincode != tmp_pwd){
+														that.res_pincode = "None";
+													}
+													// 相等时不需要再赋值
+													
+													if(that.pincode != tmp_pwd || that.res_pincode == "None"){
+														device_data["datastreams"] = []
+														return;
+													}
+												}
+											}
 											if(device_data["datastreams"][in_idx]["id"] == "location"){
 												var translate_coor = that.translate_gps(device_data["datastreams"][in_idx]["value"]["lat"], device_data["datastreams"][in_idx]["value"]["lon"]);
 												device_data["datastreams"][in_idx]["value"]["lat"] = translate_coor.latitude;
@@ -403,8 +443,8 @@ export default {
 						}
 
 					}
-
 					that.temp_data = temp_data;
+					
 				}catch(e){
 					console.log("check main error", e);
 				}
@@ -419,7 +459,8 @@ export default {
 						// key_name: JSON.stringify(action, that.trigger_time),
 						"key_name": key_name,
 						"action": action,
-						"period": period || that.trigger_time
+						"period": period || that.trigger_time,
+						"pwd": that.pincode
 					},
 					method:'POST',//请求方式  或GET，必须为大写
 					success: res => {
@@ -519,6 +560,24 @@ export default {
 				}
 				return res;
 			},
+			check_update_pin(res_pin, old_pin, new_pin, device_ids){
+				if(res_pin != "" && res_pin != old_pin){
+					uni.showToast({
+						title: "更新前pin不一致",
+						icon: "none"
+					})
+					return false;
+				}
+				// 修改onenet属性 - 类似设置st_time
+				if(old_pin != new_pin){
+					for (var device_idx in device_ids.split(",")){
+						console.log("change:", device_ids.split(",")[device_idx], "pwd", new_pin)
+						this.set_onenet_http(device_ids.split(",")[device_idx], "pwd", new_pin);
+					};
+				}
+				return false; // TODO
+				// return true;
+			},
 			// 加载缓存
 			load_storage(){
 				var that = this;
@@ -532,9 +591,11 @@ export default {
 				that.config_json = uni.getStorageSync("config_json");
 				that.config_json = that.config_json?JSON.parse(that.config_json):{};
 				that.emails = uni.getStorageSync("emails");
+				that.pincode = uni.getStorageSync("pincode");
 			},
 			//修改信息
 			change() {
+				var alert_ok = true;
 				var that = this;
 				// if(that.input_val[0]){uni.setStorageSync("device_ids", that.input_val[0]);}
 				if(that.input_val[0]){uni.setStorageSync("device_ids", that.input_val[0]);}
@@ -549,12 +610,24 @@ export default {
 					that.config_json = JSON.parse(that.input_val[9]);
 				}
 				if(that.input_val[10]){uni.setStorageSync("emails", that.input_val[10]);}
+				if(that.input_val[11]){
+					if(!that.check_update_pin(that.res_pincode, that.pincode, that.input_val[11], that.device_ids)){
+						uni.showToast({
+							title: "原pin码不正确",
+							icon: "none"
+						})
+						alert_ok = false;
+					};
+					uni.setStorageSync("pincode", that.input_val[11]);
+				}
 				// console.log("set done and get:", uni.getStorageSync("comments"));
 				// this.check_main();
-				uni.showToast({
-					title: "成功",
-					icon: "none"
-				})
+				if(alert_ok){
+					uni.showToast({
+						title: "成功",
+						icon: "none"
+					})
+				}
 			},
 			// 加载缓存显示
 			init_info() {
@@ -569,6 +642,7 @@ export default {
 				that.input_val[8] = that.product_id;
 				that.input_val[9] = JSON.stringify(that.config_json);
 				that.input_val[10] = that.emails;
+				that.input_val[11] = that.pincode;
 				that.$forceUpdate();
 			},
 			// 复制id
@@ -845,7 +919,7 @@ export default {
 			},
 			// 设定离线变量
 			set_onenet_http(device_id, key_name, value){
-				console.log(key_name, value);
+				console.log("st_val", device_id, key_name, value);
 				var that = this;
 				var datastreams = [];
 				datastreams.push({
@@ -883,8 +957,8 @@ export default {
 				var that = this;
 				if(that.config_json['timer']){
 					var send_info = that.config_json['timer'];
-					for (var device_id in send_info){
-						send_info[device_id]['code'] = that.calc_hash(send_info[device_id]["rules"]);
+					for (var device_idx in send_info){
+						send_info[device_idx]['code'] = that.calc_hash(send_info[device_idx]["rules"]);
 					};
 					// send
 					uni.request({
@@ -905,8 +979,8 @@ export default {
 									icon: "none"
 								});
 								// that.mybackend_res['sync'] = {};
-								// for (var device_id in send_info){
-								// 	that.mybackend_res['sync'][device_id] = "刚刚";
+								// for (var device_idx in send_info){
+								// 	that.mybackend_res['sync'][device_idx] = "刚刚";
 								// };
 								that.mybackend_res['sync'] = res['data']['sync'];
 								that.mybackend_res['emailmap'] = res['data']['emailmap'];
@@ -925,8 +999,8 @@ export default {
 			get_timer_info(){
 				var that = this;
 				var send_info = {};
-				for (var device_id in that.device_ids.split(",")){
-					send_info[that.device_ids.split(",")[device_id]] = {};
+				for (var device_idx in that.device_ids.split(",")){
+					send_info[that.device_ids.split(",")[device_idx]] = {};
 				};
 				uni.showModal({
 					title: '拉取同步',
@@ -950,8 +1024,8 @@ export default {
 										// 更新缓存
 										uni.setStorageSync("config_json", JSON.stringify(that.config_json));
 										// that.mybackend_res['sync'] = {};
-										// for (var device_id in send_info){
-										// 	that.mybackend_res['sync'][device_id] = res['data']['sync'][device_id] || "";
+										// for (var device_idx in send_info){
+										// 	that.mybackend_res['sync'][device_idx] = res['data']['sync'][device_idx] || "";
 										// };
 										that.mybackend_res['sync'] = res['data']['sync'];
 										that.mybackend_res['emailmap'] = res['data']['emailmap'];
@@ -974,9 +1048,9 @@ export default {
 				if(that.config_json['timer']){
 					var send_info = that.config_json['timer'];
 					var check_send_info = {}
-					for (var device_id in send_info){
-						check_send_info[device_id]={};
-						check_send_info[device_id]['code'] = that.calc_hash(send_info[device_id]["rules"]);
+					for (var device_idx in send_info){
+						check_send_info[device_idx]={};
+						check_send_info[device_idx]['code'] = that.calc_hash(send_info[device_idx]["rules"]);
 					};
 					// send
 					uni.request({

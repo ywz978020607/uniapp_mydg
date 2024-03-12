@@ -233,6 +233,10 @@
 							<label style="float:left">个性化配置：</label>
 							<input maxlength="-1" v-model="input_val[9]" style="border:0.5px solid #378888; white-space: pre-wrap;">
 							<span v-html="'<br>'"></span>
+							
+							<label style="float:left">PIN码设置：</label> <input v-model="input_val[11]" style="border:0.5px solid #378888; white-space: pre-wrap;">
+							<span v-html="'<br>'"></span>
+							
 							<button class="btn btn-primary" @click="change();">保存上述配置到本机</button>
 							<span v-html="'<br>'"></span>
 							<!-- #ifdef H5 -->
@@ -306,7 +310,7 @@
 							<span v-html="'<br>'"></span>
 							<text class="flex flex-direction" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
 								暂不接受捐赠，您的bilibili点赞/关注是作者开发的动力~
-								version: 2024-0218
+								version: 2024-0312
 							</text>
 						</div>
 
