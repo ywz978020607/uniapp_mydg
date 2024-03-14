@@ -618,8 +618,8 @@ export default {
 						})
 						alert_ok = false;
 					};
-					uni.setStorageSync("pincode", that.input_val[11]);
 				}
+				uni.setStorageSync("pincode", that.input_val[11] || "");
 				// console.log("set done and get:", uni.getStorageSync("comments"));
 				// this.check_main();
 				if(alert_ok){
