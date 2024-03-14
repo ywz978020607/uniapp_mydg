@@ -139,9 +139,17 @@
 								<div v-if="each['device_type'] == 3 || each['device_type'] == 4|| each['device_type'] == 5" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
 									<!-- {{each.datastreams[0]["value"]["lat"]}} -->
 									<div v-for="(data_each,data_index) in each.datastreams" :obj="data_each.id" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
-										<div v-if="(each['device_type'] == 4 || each['device_type'] == 5) && (data_each['id'].slice(0,4)=='data' || data_each['id'].slice(0,2)=='in')" style="display: flex;flex-direction: column;align-items: center;">
-											<p>{{data_each["id"]}}: {{data_each["value"]}} {{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
-											<button v-if="data_each['id'].slice(0,4)=='data'" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="send(key.substr(1,),data_each['id'], 't_off');delay_fresh();">触低发送</button>
+										<div v-if="(each['device_type'] == 4 || each['device_type'] == 5) && (data_each['id'].slice(0,4)=='data')" style="display: flex;flex-direction: column;align-items: center;">
+											<!-- <button v-if="data_each['id'].slice(0,4)=='data'" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="send(key.substr(1,),data_each['id'], 't_off');delay_fresh();">触低发送</button> -->											
+											<div v-if="data_each['id']=='datalast'" class="flex" style="white-space: pre-wrap;">
+												 <p v-if="data_each['value']=='data1'"> 最近:开指令-{{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
+												 <p v-else> 最近:关指令-{{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
+											</div>
+											<div v-if="data_each['id']=='data1'" class="flex" style="white-space: pre-wrap;">
+												<button style="margin-top: 10rpx; height: 60rpx;font-size: 28rpx;" class="btn btn-primary" @click="send_check(key.substr(1,),'data1', 't_off');">{{load_config_show(key.substr(1,),'data1', "车门打开")}}</button>
+												<span v-if="check_seen_status(key.substr(1,),data_each['id'], 'on')" v-html="'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
+												<button style="margin-top: 10rpx;height: 60rpx;font-size: 28rpx;" class="btn btn-primary" @click="send(key.substr(1,),'data2', 't_off');delay_fresh();">{{load_config_show(key.substr(1,),'data2', "车门上锁")}}</button>
+											</div>
 										</div>
 										<view v-if="data_each.id == 'location'" class="row-bottom" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
 											<p>{{data_each["at"]}}</p>

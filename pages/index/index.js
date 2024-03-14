@@ -449,7 +449,23 @@ export default {
 					console.log("check main error", e);
 				}
 			},
+			
 			// 通过onenet下发mqtt指令到硬件 - synccmd
+			send_check(device_id, key_name, action, period=null) {
+				var that = this;
+				uni.showModal({
+				title: '提示',
+				content: '是否确认操作',
+					success: function (res) {
+				if (res.confirm) {
+				// if (res.cancel) {
+					that.send(device_id, key_name, action, period);
+					
+					that.delay_fresh();
+				}
+				}
+				});
+			},
 			send(device_id, key_name, action, period=null) {
 				var that = this;
 				uni.request({
