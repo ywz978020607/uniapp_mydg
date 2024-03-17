@@ -88,7 +88,7 @@
 											<p v-if="data_each['value']=='1'" style="font-size: 60rpx;color: red;">{{data_each["id"].slice(4,)}} 开启</p>
 											<p>{{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
 											 <div class="flex" style="white-space: pre-wrap;">
-												 <button v-if="check_seen_status(key.substr(1,),data_each['id'], 'on')" style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 'on');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "开启")}}</button>
+												 <button v-if="check_seen_status(key.substr(1,),data_each['id'], 'on')" style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send_check(key.substr(1,),data_each['id'], 'on');">{{load_config_show(key.substr(1,),data_each['id'], "开启")}}</button>
 												 <span v-if="check_seen_status(key.substr(1,),data_each['id'], 'on')" v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
 												 <button v-if="check_seen_status(key.substr(1,),data_each['id'], 'off')" style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 'off');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "关闭")}}</button>
 												 <span v-if="check_seen_status(key.substr(1,),data_each['id'], 'off')" v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
@@ -108,7 +108,7 @@
 											 </div>
 											 <div v-else-if="check_seen_status(key.substr(1,), data_each['id'], 't_on')" class="flex" style="white-space: pre-wrap;">
 											 	<span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
-												<button v-if="data_index/2==0" style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_on');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "打开开关")}}</button>
+												<button v-if="data_index/2==0" style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send_check(key.substr(1,),data_each['id'], 't_on');">{{load_config_show(key.substr(1,),data_each['id'], "打开开关")}}</button>
 												<button v-else style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_on');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "关闭开关")}}</button>
 											 </div>
 										 </div>
@@ -126,7 +126,7 @@
 											 </div>
 											 <div v-else-if="check_seen_status(key.substr(1,),data_each['id'], 't_off')" class="flex" style="white-space: pre-wrap;">
 												 <span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
-												 <button v-if="data_index/2==0" style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_off');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "打开开关")}}</button>
+												 <button v-if="data_index/2==0" style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send_check(key.substr(1,),data_each['id'], 't_off');">{{load_config_show(key.substr(1,),data_each['id'], "打开开关")}}</button>
 												 <button v-else style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="send(key.substr(1,),data_each['id'], 't_off');delay_fresh();">{{load_config_show(key.substr(1,),data_each['id'], "关闭开关")}}</button>
 											 </div>
 										 </div>
