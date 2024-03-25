@@ -166,6 +166,10 @@
 											iconPath: '/static/images/location.png',
 											<!-- #endif -->
 										}]" style="width: 100%; height: 500rpx;"></map>
+										<!-- #ifdef H5 -->
+										lat: {{ data_each.value.lat }}
+										lon: {{ data_each.value.lon }}
+										<!-- #endif -->
 										<!-- show-location -->
 										<div v-if="each['device_type'] == 4" class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
 											<input v-model="data_each.value.st_time[0]" placeholder="上报间隔-0关" style="width: 50%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
@@ -248,7 +252,11 @@
 							<button class="btn btn-primary" @click="change();">保存上述配置到本机</button>
 							<span v-html="'<br>'"></span>
 							<!-- #ifdef H5 -->
-							<button class="btn btn-secondary" @click="jump_manage_timer();">定时配置管理</button>
+							<div class="flex" style="white-space: pre-wrap;">
+								<button class="btn btn-secondary" @click="jump_manage_timer();">定时继电配置</button>
+								<span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
+								<button class="btn btn-secondary" @click="jump_manage_rail();">电子围栏配置</button>
+							</div>
 							<!-- #endif -->
 							<!-- #ifndef H5 -->
 							定时功能需使用网页版，详情见小程序说明
@@ -324,7 +332,7 @@
 
 <!-- ------------------------------------------------------------------------------- -->
 <!-- ------------------------------------------------------------------------------- -->
-						<!-- 独立页面-需返回按钮 -->
+						<!-- -1轨迹独立页面-需返回按钮 -->
 						<div v-if="seen_id==-1" style="display: inline-block;">
 							<button class="btn btn-primary" @click="restore_seen_id();">返回原主页</button>
 							<span v-html="'<br>'"></span>
@@ -342,7 +350,7 @@
 							</div>
 						</div>
 
-						<!-- 独立页面-需返回按钮 -->
+						<!-- -2定时独立页面-需返回按钮 -->
 						<div v-if="seen_id==-2" style="display: inline-block;">
 							<button class="btn btn-primary" @click="restore_seen_id();">返回原主页</button>
 							<span v-html="'<br><br>'"></span>
@@ -404,6 +412,30 @@
 							</div>
 
 							
+						</div>
+
+						<!-- -3围栏独立页面-需返回按钮 -->
+						<div v-if="seen_id==-3" style="display: inline-block;">
+							<button class="btn btn-primary" @click="restore_seen_id();">返回原主页</button>
+							<span v-html="'<br>'"></span>
+							
+							<div class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
+								选点坐标<input v-model="rail_val[0]" placeholder="输入纬度" style="width: 35%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
+								<input v-model="rail_val[1]" placeholder="输入经度" style="width: 35%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
+							</div>
+							<map id="map" :longitude="rail_val[1]" :latitude="rail_val[0]" :scale="16"
+								:markers="[{
+								id: 0,
+								latitude: rail_val[0],longitude: rail_val[1],
+								width: 20,height: 20,
+								title: '测试位置',
+								iconPath: '/static/images/location.png',
+							}]" style="width: 100%; height: 500rpx;"></map>
+
+							<div>
+								{{ rail_val }}
+							</div>
+
 						</div>
 				</div>
 

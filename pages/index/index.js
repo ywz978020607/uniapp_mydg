@@ -55,7 +55,10 @@ export default {
 			// 0-设备ids，1-备注，2-apikey，3-触发秒数，4-hidusbid, [5-hidusb文本，6-hidusb速度]
 			// 7-类型[0-全IO,1-剪裁IO,2-红外控制,3-地图类型, 4-地图类型定时工作版]，
 			// 8-产品id, 9-补充配置的字符串输入, 10-邮箱号, 11-PIN码
+
+			rail_val: [36.2332, 120.23423, "", 0, 0], //围栏相关 - 经纬度，备注，距离，类型
 			config_json: {}, // 补充配置
+
 			emails: "",
 			pincode: "",
 			res_pincode: "",
@@ -89,6 +92,7 @@ export default {
 		// this.username = options.username;
 		// }
 		this.restore_seen_id();
+		this.seen_id = -3;
 		console.log("seen_id:", this.seen_id);
 
 		//加载时先刷新一下
@@ -924,6 +928,17 @@ export default {
 				return res;
 			},
 
+
+			// 独立子页面 -3 电子围栏设置
+			jump_manage_rail(){
+				var that = this;
+				that.seen_id = -2;
+				that.check_main(0);
+				console.log("电子围栏信息");
+				
+
+
+			},
 
 
 			// 配置导出和导入
