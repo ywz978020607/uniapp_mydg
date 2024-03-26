@@ -190,11 +190,11 @@
 											<uni-datetime-picker type="datetime" v-model="timeEnd" @change="changeTime($event, 'end')" />
 										</div>
 										<div class="flex" style="white-space: pre-wrap;">
-											<button class="btn btn-secondary" @click="create_path(key.substr(1,));">生成轨迹并查看</button>
+											<button class="btn btn-secondary" @click="create_path(key.substr(1,));">轨迹回看</button>
 											<span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
-											<button class="btn btn-secondary" @click="jump_manage_rail(key.substr(1,), data_each.value.lat, data_each.value.lon, data_each.value.erail);">电子围栏配置</button>
+											<button class="btn btn-secondary" @click="jump_manage_rail(key.substr(1,), data_each.value.lat, data_each.value.lon, data_each.value.erail, data_each.value.erail_flag);">电子围栏</button>
 											<span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
-											<button class="btn btn-secondary" @click="open_location(data_each.value.lat, data_each.value.lon);">位置分享/导航</button>
+											<button class="btn btn-secondary" @click="open_location(data_each.value.lat, data_each.value.lon);">位置导航</button>
 										</div>
 										</view>
 									</div>
@@ -414,25 +414,35 @@
 						<div v-if="seen_id==-3" style="display: inline-block;">
 							<button class="btn btn-primary" @click="restore_seen_id();">返回原主页</button>
 							<span v-html="'<br>'"></span>
-
+							
+							<div>
+								最新坐标：{{rail_val[0]}}, {{rail_val[1]}}. 
+								<span v-if="rail_val[4]==1" style="color: red;">告警</span><span v-else style="color: green;">正常</span>
+							</div>
+							<span v-html="'<br>'"></span>
 							<div class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
 								选点坐标<input v-model="rail_val[0]" placeholder="输入纬度" style="width: 35%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
 								<input v-model="rail_val[1]" placeholder="输入经度" style="width: 35%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
 							</div>
-							<map id="map"  :polygons="get_poly_list(rail_val[2])" :longitude="rail_val[1]" :latitude="rail_val[0]" :scale="16"
+							<map id="map"  :polygons="get_poly_list(rail_val[3])" :longitude="rail_val[1]" :latitude="rail_val[0]" :scale="16"
 								:markers="[{
 								id: 0,
 								latitude: rail_val[0],longitude: rail_val[1],
 								width: 20,height: 20,
-								title: 'test',
+								title: rail_val[2],
 								<!-- #ifdef H5 -->
 								iconPath: '/static/images/location.png',
 								<!-- #endif -->
 							}]" style="width: 100%; height: 500rpx;"></map>
 
 							<div>
-								{{ rail_val }}
-							</div>
+								<span v-html="'<br>'"></span>
+								<label style="float:left">围栏设置</label>
+								<input v-model="rail_val[3]" style="border:0.5px solid #378888; white-space: pre-wrap;" />
+								</div>
+							<span v-html="'<br>'"></span>
+							
+							<button class="btn btn-primary" @click="set_onenet_http(rail_val[2], 'erail', rail_val[3]);">提交/更新围栏设置</button>
 
 						</div>
 				</div>

@@ -56,7 +56,7 @@ export default {
 			// 7-类型[0-全IO,1-剪裁IO,2-红外控制,3-地图类型, 4-地图类型定时工作版]，
 			// 8-产品id, 9-补充配置的字符串输入, 10-邮箱号, 11-PIN码
 
-			rail_val: [36.2332, 120.23423, ""], //围栏相关 - 经纬度，新规则"{0:[[[lat1,lon1],[lat2,lon2]], ...]}"]
+			rail_val: [36.2332, 120.23423, "", "", 0], //围栏相关 - 经纬度，设备号，新规则"{0:[[[lat1,lon1],[lat2,lon2]], ...]}"], 触发规则
 			config_json: {}, // 补充配置
 
 			emails: "",
@@ -92,7 +92,7 @@ export default {
 		// this.username = options.username;
 		// }
 		this.restore_seen_id();
-		this.seen_id = -3;
+		// this.seen_id = -3;
 		console.log("seen_id:", this.seen_id);
 
 		//加载时先刷新一下
@@ -354,6 +354,14 @@ export default {
 														device_data["datastreams"][in_idx]["value"]["battery"] = device_data["datastreams"][in_in_idx]["value"];
 													}
 
+													// 添加围栏信息
+													if(device_data["datastreams"][in_in_idx]["id"] == "erail"){
+														device_data["datastreams"][in_idx]["value"]["erail"] = device_data["datastreams"][in_in_idx]["value"];
+													}
+													if(device_data["datastreams"][in_in_idx]["id"] == "erail_flag"){
+														device_data["datastreams"][in_idx]["value"]["erail_flag"] = device_data["datastreams"][in_in_idx]["value"];
+													}
+
 													// // 扫描并添加自身st_time -- 后置-单独走kv
 												}
 												// 额外获取离线数据 k-v
@@ -430,6 +438,14 @@ export default {
 													// 添加电量信息
 													if(device_data["datastreams"][in_in_idx]["id"] == "b"){
 														device_data["datastreams"][in_idx]["value"]["battery"] = device_data["datastreams"][in_in_idx]["value"];
+													}
+
+													// 添加围栏信息
+													if(device_data["datastreams"][in_in_idx]["id"] == "erail"){
+														device_data["datastreams"][in_idx]["value"]["erail"] = device_data["datastreams"][in_in_idx]["value"];
+													}
+													if(device_data["datastreams"][in_in_idx]["id"] == "erail_flag"){
+														device_data["datastreams"][in_idx]["value"]["erail_flag"] = device_data["datastreams"][in_in_idx]["value"];
 													}
 
 													// 添加st_time
@@ -930,41 +946,46 @@ export default {
 
 
 			// 独立子页面 -3 电子围栏设置
-			jump_manage_rail(pid = "", lat = 36.2332, lon = 120.23423, erail=""){
+			jump_manage_rail(pid = "", lat = 36.2332, lon = 120.23423, erail="", erail_flag = 0){
 				console.log("pid:", pid, lat, lon);
 				var that = this;
 				that.seen_id = -3;
-				that.rail_val[0] = lat;
-				that.rail_val[1] = lon;
-				that.rail_val[2] = erail;
+				that.rail_val[0] = lat.toFixed(5);
+				that.rail_val[1] = lon.toFixed(5);
+				that.rail_val[2] = pid;
+				that.rail_val[3] = erail;
+				that.rail_val[4] = erail_flag;
+				// '{"0":[[[40.66624,122.27727],[40.66624,122.57727],[40.76624,122.37727]]]}'
+				// that.rail_val[3] = '{"0":[[[36.2332,120.23423],[36.2432,120.25423],[36.2332,120.26423]]]}';
 				// that.check_main(0);
 				console.log("电子围栏信息");
-
 			},
 			get_poly_list(merge_info = ""){
-				// merge_info = JSON.stringify(that.config_json || {})
-				var tmp_info = JSON.parse(that.merge_info || "{}")
+				var tmp_info = JSON.parse(merge_info || "{}")
 				var res = [];
-				// for
-
-				// for()
-				var res = [{
-					points: [{
-						latitude: 36.1332,
-						longitude: 120.13423
-					},
-				],
-				strokeWidth: "2",
-				strokeColor: "#2223FD",
-				fillColor: "#9FA4F6"
-				},
-				];
+				for(var type in [0, 1]){
+					if (tmp_info[type] != null){
+						for(var idx_area in tmp_info[type]){
+							if(tmp_info[type][idx_area].length >= 3){
+								var add_new_dict = {
+									points: [],
+									strokeWidth: "2",
+									strokeColor: (type==0)?"#2223FD":"#c85a64",
+									fillColor: (type==0)?"#9FA4F6":"#c85a64"
+								}
+								for(var idx_point in tmp_info[type][idx_area]){
+									add_new_dict["points"].push({
+										latitude: tmp_info[type][idx_area][idx_point][0],
+										longitude: tmp_info[type][idx_area][idx_point][1]
+									});
+								}
+								res.push(add_new_dict);
+							}
+						}
+					}
+				}
 				return res;
 			},
-
-
-
-
 
 			// 配置导出和导入
 			export_info(){
