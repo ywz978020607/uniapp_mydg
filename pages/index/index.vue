@@ -305,7 +305,7 @@
 
 						<div v-if="seen_id==3" style="display: inline-block;">
 							<text>
-								小程序由摸鱼大鸽开发，用于广域网下的远程控制/定位追踪/红外控制/广域HID注入等功能，已部署案例：电脑远程开机、车库门控制、随车定位追踪、家居控制、短信接码等。
+								小程序由摸鱼大鸽开发，用于广域网下的远程控制/定位追踪/电子围栏/红外控制/广域HID注入等功能，已部署案例：电脑远程开机、车库门控制、随车定位追踪、家居控制、短信接码等。
 
 								· 补充：定时功能由于使用了三方后端，小程序不支持，需使用网页版应用，浏览器打开http://api.moyudage.top:8880/files/mydgh5/ 其他部分与小程序用法完全相同。
 							</text>
@@ -322,7 +322,7 @@
 							<span v-html="'<br>'"></span>
 							<text class="flex flex-direction" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
 								暂不接受捐赠，您的bilibili点赞/关注是作者开发的动力~
-								version: 2024-0312
+								version: 2024-0327
 							</text>
 						</div>
 
