@@ -97,7 +97,7 @@
 										 <!-- <span v-html="'<br>'"></span> -->
 									</div>
 								</div>
-								
+
 								<div v-if="each['device_type'] == 'relay_t_on'">
 									<div v-for="(data_each,data_index) in each.datastreams" :obj="data_each.id" style="display: flex;flex-direction: column;align-items: center;">
 										<div v-if="data_each['id'].slice(0,4)=='data'" style="display: flex;flex-direction: column;align-items: center;">
@@ -140,7 +140,7 @@
 									<!-- {{each.datastreams[0]["value"]["lat"]}} -->
 									<div v-for="(data_each,data_index) in each.datastreams" :obj="data_each.id" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
 										<div v-if="(each['device_type'] == 4 || each['device_type'] == 5) && (data_each['id'].slice(0,4)=='data')" style="display: flex;flex-direction: column;align-items: center;">
-											<!-- <button v-if="data_each['id'].slice(0,4)=='data'" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="send(key.substr(1,),data_each['id'], 't_off');delay_fresh();">触低发送</button> -->											
+											<!-- <button v-if="data_each['id'].slice(0,4)=='data'" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="send(key.substr(1,),data_each['id'], 't_off');delay_fresh();">触低发送</button> -->
 											<div v-if="data_each['id']=='datalast'" class="flex" style="white-space: pre-wrap;">
 												 <p v-if="data_each['value']=='data1'"> 最近:开指令-{{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
 												 <p v-else> 最近:关指令-{{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
@@ -166,26 +166,22 @@
 											iconPath: '/static/images/location.png',
 											<!-- #endif -->
 										}]" style="width: 100%; height: 500rpx;"></map>
-										<!-- #ifdef H5 -->
-										lat: {{ data_each.value.lat }}
-										lon: {{ data_each.value.lon }}
-										<!-- #endif -->
 										<!-- show-location -->
 										<div v-if="each['device_type'] == 4" class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
 											<input v-model="data_each.value.st_time[0]" placeholder="上报间隔-0关" style="width: 50%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
 											<button class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="set_onenet_http(key.substr(1,), 'st', data_each.value.st_time.join());">修改定时数据</button>
 										</div>
-										
+
 										<div v-if="each['device_type'] == 5" class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
 											<input v-model="data_each.value.st_time[0]" placeholder="上报间隔-0关" style="width: 50%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
-											<button v-if="data_each.value.st_time[1] != null" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st_time = [data_each.value.st_time[0]]; set_onenet_http(key.substr(1,), 'st', data_each.value.st_time.join());delay_fresh(200);">关快查</button>	
-											<button v-else class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st_time = [data_each.value.st_time[0]==''?0:data_each.value.st_time[0], 1.0, 0]; set_onenet_http(key.substr(1,), 'st', data_each.value.st_time.join());delay_fresh(200);">开快查</button>	
+											<button v-if="data_each.value.st_time[1] != null" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st_time = [data_each.value.st_time[0]]; set_onenet_http(key.substr(1,), 'st', data_each.value.st_time.join());delay_fresh(200);">关快查</button>
+											<button v-else class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st_time = [data_each.value.st_time[0]==''?0:data_each.value.st_time[0], 1.0, 0]; set_onenet_http(key.substr(1,), 'st', data_each.value.st_time.join());delay_fresh(200);">开快查</button>
 											<input v-if="data_each.value.st_time[1] != null" v-model="data_each.value.st_time[1]" placeholder="快查间隔" style="width: 30%;border:0.5px solid #378888;" type="text">
 										</div>
 										<div v-if="each['device_type'] == 5" class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
 											<button class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="set_onenet_http(key.substr(1,), 'st', data_each.value.st_time.join());">修改定时数据</button>
-											<button v-if="data_each.value.st_time[1] != null && data_each.value.st_time[2]!=1" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st_time[2] = 1; set_onenet_http(key.substr(1,), 'st', data_each.value.st_time.join()); delay_fresh(200);">立即查</button>	
-											<button v-else-if="data_each.value.st_time[1] != null" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;">刷新等待</button>  
+											<button v-if="data_each.value.st_time[1] != null && data_each.value.st_time[2]!=1" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st_time[2] = 1; set_onenet_http(key.substr(1,), 'st', data_each.value.st_time.join()); delay_fresh(200);">立即查</button>
+											<button v-else-if="data_each.value.st_time[1] != null" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;">刷新等待</button>
 										</div>
 
 										<div class="flex" style="white-space: pre-wrap;">
@@ -195,6 +191,8 @@
 										</div>
 										<div class="flex" style="white-space: pre-wrap;">
 											<button class="btn btn-secondary" @click="create_path(key.substr(1,));">生成轨迹并查看</button>
+											<span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
+											<button class="btn btn-secondary" @click="jump_manage_rail(key.substr(1,), data_each.value.lat, data_each.value.lon, data_each.value.erail);">电子围栏配置</button>
 											<span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
 											<button class="btn btn-secondary" @click="open_location(data_each.value.lat, data_each.value.lon);">位置分享/导航</button>
 										</div>
@@ -238,24 +236,22 @@
 
 							<label style="float:left">HID页面-设备名(HID专用, 可选)：</label> <input v-model="input_val[4]" style="border:0.5px solid #378888; white-space: pre-wrap;">
 							<span v-html="'<br>'"></span>
-							
+
 							<label style="float:left">邮箱号(多则逗号分隔)：</label> <input v-model="input_val[10]" style="border:0.5px solid #378888; white-space: pre-wrap;">
 							<span v-html="'<br>'"></span>
-							
+
 							<label style="float:left">个性化配置：</label>
 							<input maxlength="-1" v-model="input_val[9]" style="border:0.5px solid #378888; white-space: pre-wrap;">
 							<span v-html="'<br>'"></span>
-							
+
 							<label style="float:left">PIN码设置：</label> <input v-model="input_val[11]" style="border:0.5px solid #378888; white-space: pre-wrap;">
 							<span v-html="'<br>'"></span>
-							
+
 							<button class="btn btn-primary" @click="change();">保存上述配置到本机</button>
 							<span v-html="'<br>'"></span>
 							<!-- #ifdef H5 -->
 							<div class="flex" style="white-space: pre-wrap;">
 								<button class="btn btn-secondary" @click="jump_manage_timer();">定时继电配置</button>
-								<span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
-								<button class="btn btn-secondary" @click="jump_manage_rail();">电子围栏配置</button>
 							</div>
 							<!-- #endif -->
 							<!-- #ifndef H5 -->
@@ -354,27 +350,27 @@
 						<div v-if="seen_id==-2" style="display: inline-block;">
 							<button class="btn btn-primary" @click="restore_seen_id();">返回原主页</button>
 							<span v-html="'<br><br>'"></span>
-							
+
 
 							<div class="flex" style="white-space: pre-wrap;">
 								<button class="btn btn-secondary" @click="get_timer_info();">从服务器拉取</button>
 								<span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
 								<button class="btn btn-secondary" @click="set_timer_info();">同步到服务器</button>
 							</div>
-							
-							
-							<span v-html="'<br>'"></span>
-							
 
-							<div v-for="(data_each, device_id,data_index) in config_json['timer']" :obj="device_id" 
+
+							<span v-html="'<br>'"></span>
+
+
+							<div v-for="(data_each, device_id,data_index) in config_json['timer']" :obj="device_id"
 							v-if="device_id!='api_key'" style="border: 1px solid gray;display: flex;flex-direction: column;align-items: center;">
 								{{ temp_data["+"+device_id]['comments'] }}
 								{{ device_id }}
 								<div v-if="mybackend_res['sync'][device_id] != null" style="color:  blue;">已同步 {{ mybackend_res['sync'][device_id] }}</div>
 								<div v-else style="color:  red;">未同步</div>
 								<div v-if="mybackend_res['emailmap'][device_id] != null" style="">邮箱 {{ mybackend_res['emailmap'][device_id] }}</div>
-								
-								<div @click="del_timer_config(device_id, data_in_index, data_item)" v-for="(data_item,data_in_index) in data_each['rules']" :obj="data_in_index" 
+
+								<div @click="del_timer_config(device_id, data_in_index, data_item)" v-for="(data_item,data_in_index) in data_each['rules']" :obj="data_in_index"
 								style="display: flex;flex-direction: column;align-items: center;">
 								<span v-html="'<br>'"></span>
 								第{{ data_in_index+1 }}条配置 <br>
@@ -394,7 +390,7 @@
 							<h1 class="flex" style="white-space: pre-wrap; align-items: center;justify-content: center; color: #378888;">新增配置</h1>
 							<div style="border: 1px solid gray;">
 							<uni-data-picker :localdata="manage_timer_v['pick_data']" placeholder="请选择设备及引脚规则" popup-title="请选择设备及引脚规则" @change="select_timer_item($event)"></uni-data-picker>
-							
+
 							<span v-html="'<br>'"></span>
 
 							<div class="flex" style="white-space: pre-wrap; align-items: center;justify-content: center;">
@@ -411,25 +407,27 @@
 							<button class="btn btn-secondary" @click="create_timer_config();">新增配置到本地</button>
 							</div>
 
-							
+
 						</div>
 
 						<!-- -3围栏独立页面-需返回按钮 -->
 						<div v-if="seen_id==-3" style="display: inline-block;">
 							<button class="btn btn-primary" @click="restore_seen_id();">返回原主页</button>
 							<span v-html="'<br>'"></span>
-							
+
 							<div class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
 								选点坐标<input v-model="rail_val[0]" placeholder="输入纬度" style="width: 35%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
 								<input v-model="rail_val[1]" placeholder="输入经度" style="width: 35%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
 							</div>
-							<map id="map" :longitude="rail_val[1]" :latitude="rail_val[0]" :scale="16"
+							<map id="map"  :polygons="get_poly_list(rail_val[2])" :longitude="rail_val[1]" :latitude="rail_val[0]" :scale="16"
 								:markers="[{
 								id: 0,
 								latitude: rail_val[0],longitude: rail_val[1],
 								width: 20,height: 20,
-								title: '测试位置',
+								title: 'test',
+								<!-- #ifdef H5 -->
 								iconPath: '/static/images/location.png',
+								<!-- #endif -->
 							}]" style="width: 100%; height: 500rpx;"></map>
 
 							<div>

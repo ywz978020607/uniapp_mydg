@@ -56,13 +56,13 @@ export default {
 			// 7-类型[0-全IO,1-剪裁IO,2-红外控制,3-地图类型, 4-地图类型定时工作版]，
 			// 8-产品id, 9-补充配置的字符串输入, 10-邮箱号, 11-PIN码
 
-			rail_val: [36.2332, 120.23423, "", 0, 0], //围栏相关 - 经纬度，备注，距离，类型
+			rail_val: [36.2332, 120.23423, ""], //围栏相关 - 经纬度，新规则"{0:[[[lat1,lon1],[lat2,lon2]], ...]}"]
 			config_json: {}, // 补充配置
 
 			emails: "",
 			pincode: "",
 			res_pincode: "",
-			
+
 			temp_data: {},
 			//#ifndef H5
 			direction: "https://iot-api.heclouds.com", // "http://183.230.40.34"
@@ -77,10 +77,10 @@ export default {
 			mybackend_res: {"sync": {}, "emailmap": {}},
 			// manage_timer_v: {"pick_data": [], "picked": ["12:00", "", "", "", "", []], "pick_action": {"on":"常高", "off":"常低", "t_on":"触高", "t_off":"触低"},
 			// 	"pick_duplicate": [{label: "仅一次",value: "once"},{label: "每天",value: "all"},{label: "周一",value: "1"},{label: "周二",value: "2"},{label: "周三",value: "3"},{label: "周四",value: "4"},{label: "周五",value: "5"},{label: "周六",value: "6"},{label: "周日",value: "7"}]
-			// }, 
+			// },
 			manage_timer_v: {"pick_data": [], "picked": ["12:00", ], "pick_action": {"on":"常高", "off":"常低", "t_on":"触高", "t_off":"触低"},
 				"pick_duplicate": [{text: "仅一次",value: "once", is_selected: false},{text: "每天",value: "all", is_selected: false},{text: "周一",value: "1", is_selected: false},{text: "周二",value: "2", is_selected: false},{text: "周三",value: "3", is_selected: false},{text: "周四",value: "4", is_selected: false},{text: "周五",value: "5", is_selected: false},{text: "周六",value: "6", is_selected: false},{text: "周日",value: "7", is_selected: false}]
-			}, 
+			},
 		}
 	},
 	onLoad(options) {
@@ -329,7 +329,7 @@ export default {
 														that.res_pincode = "None";
 													}
 													// 相等时不需要再赋值
-													
+
 													if(that.pincode != tmp_pwd || that.res_pincode == "None"){
 														device_data["datastreams"] = []
 														return;
@@ -406,7 +406,7 @@ export default {
 														that.res_pincode = "None";
 													}
 													// 相等时不需要再赋值
-													
+
 													if(that.pincode != tmp_pwd || that.res_pincode == "None"){
 														device_data["datastreams"] = []
 														return;
@@ -448,12 +448,12 @@ export default {
 
 					}
 					that.temp_data = temp_data;
-					
+
 				}catch(e){
 					console.log("check main error", e);
 				}
 			},
-			
+
 			// 通过onenet下发mqtt指令到硬件 - synccmd
 			send_check(device_id, key_name, action, period=null) {
 				var that = this;
@@ -464,7 +464,7 @@ export default {
 				if (res.confirm) {
 				// if (res.cancel) {
 					that.send(device_id, key_name, action, period);
-					
+
 					that.delay_fresh();
 				}
 				}
@@ -562,7 +562,7 @@ export default {
 				// try {
 					if (action=="") { if (((this.config_json[device_id] || {})["hidep"] || []).indexOf(key_name) != -1) return false; }
 					else if (((this.config_json[device_id] || {})["hidef"] || []).indexOf(action) != -1 || ((((this.config_json[device_id] || {})["hidefp"] || {})[key_name] || []).indexOf(action) != -1)) return false;
-					
+
 					if (action=="") { if (((this.config_json["*"] || {})["hidep"] || []).indexOf(key_name) != -1) return false; }
 					else if (((this.config_json["*"] || {})["hidef"] || []).indexOf(action) != -1 || ((((this.config_json["*"] || {})["hidefp"] || {})[key_name] || []).indexOf(action) != -1)) return false;
 				// } catch(e) {
@@ -930,15 +930,40 @@ export default {
 
 
 			// 独立子页面 -3 电子围栏设置
-			jump_manage_rail(){
+			jump_manage_rail(pid = "", lat = 36.2332, lon = 120.23423, erail=""){
+				console.log("pid:", pid, lat, lon);
 				var that = this;
-				that.seen_id = -2;
-				that.check_main(0);
+				that.seen_id = -3;
+				that.rail_val[0] = lat;
+				that.rail_val[1] = lon;
+				that.rail_val[2] = erail;
+				// that.check_main(0);
 				console.log("电子围栏信息");
-				
-
 
 			},
+			get_poly_list(merge_info = ""){
+				// merge_info = JSON.stringify(that.config_json || {})
+				var tmp_info = JSON.parse(that.merge_info || "{}")
+				var res = [];
+				// for
+
+				// for()
+				var res = [{
+					points: [{
+						latitude: 36.1332,
+						longitude: 120.13423
+					},
+				],
+				strokeWidth: "2",
+				strokeColor: "#2223FD",
+				fillColor: "#9FA4F6"
+				},
+				];
+				return res;
+			},
+
+
+
 
 
 			// 配置导出和导入
