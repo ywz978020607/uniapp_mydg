@@ -442,7 +442,7 @@
 								</div>
 							<span v-html="'<br>'"></span>
 
-							<button class="btn btn-primary" @click="set_onenet_http(rail_val[2], 'erail', rail_val[3]);">提交/更新围栏设置</button>
+							<button class="btn btn-primary" @click="set_onenet_http(rail_val[2], 'erail', rail_val[3].replace(/\s+/g, ''));">提交/更新围栏设置</button>
 							<span v-html="'<br>'"></span>
 						</div>
 				</div>

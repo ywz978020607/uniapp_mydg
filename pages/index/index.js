@@ -955,9 +955,14 @@ export default {
 				that.rail_val[2] = pid;
 				that.rail_val[3] = erail;
 				that.rail_val[4] = erail_flag;
-				// '{"0":[[[40.66624,122.27727],[40.66624,122.57727],[40.76624,122.37727]]]}'
-				// that.rail_val[3] = '{"0":[[[36.2332,120.23423],[36.2432,120.25423],[36.2332,120.26423]]]}';
-				// that.check_main(0);
+				if(erail_flag == 1){
+					uni.showModal({
+					    title: '围栏报警',
+					    success: function (res) {
+					        // if (res.confirm) { } else if (res.cancel) {
+					    }
+					});
+				}
 				console.log("电子围栏信息");
 			},
 			get_poly_list(merge_info = ""){
