@@ -976,7 +976,8 @@ export default {
 									points: [],
 									strokeWidth: "2",
 									strokeColor: (type==0)?"#2223FD":"#c85a64",
-									fillColor: (type==0)?"#9FA4F6":"#c85a64"
+									fillColor: (type==0)?"#9FA4F66a":"#c85a646a",
+									
 								}
 								for(var idx_point in tmp_info[type][idx_area]){
 									add_new_dict["points"].push({
