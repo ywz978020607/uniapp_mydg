@@ -414,9 +414,9 @@
 						<div v-if="seen_id==-3" style="display: inline-block;">
 							<button class="btn btn-primary" @click="restore_seen_id();">返回原主页</button>
 							<span v-html="'<br>'"></span>
-							
+
 							<div>
-								最新坐标：{{rail_val[0]}}, {{rail_val[1]}}. 
+								最新坐标：{{rail_val[0]}}, {{rail_val[1]}}.
 								<span v-if="rail_val[4]==1" style="color: red;">告警</span><span v-else style="color: green;">正常</span>
 							</div>
 							<span v-html="'<br>'"></span>
@@ -441,9 +441,9 @@
 								<input v-model="rail_val[3]" style="border:0.5px solid #378888; white-space: pre-wrap;" />
 								</div>
 							<span v-html="'<br>'"></span>
-							
-							<button class="btn btn-primary" @click="set_onenet_http(rail_val[2], 'erail', rail_val[3]);">提交/更新围栏设置</button>
 
+							<button class="btn btn-primary" @click="set_onenet_http(rail_val[2], 'erail', rail_val[3]);">提交/更新围栏设置</button>
+							<span v-html="'<br>'"></span>
 						</div>
 				</div>
 
