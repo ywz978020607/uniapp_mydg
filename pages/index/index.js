@@ -226,8 +226,8 @@ export default {
 							}
 							if(that.product_id){
 								uni.request({
-								url: that.direction + "/device/detail?product_id=" + that.product_id + "&device_name=" + that.hid_usb,
-								header: { "authorization": that.api_key},
+								url: that.direction + "/device/detail?product_id=" + that.product_id.split("&")[0] + "&device_name=" + that.hid_usb,
+								header: { "authorization": that.api_key.split(";")[0]},
 								method:'GET',//请求方式  或GET，必须为大写
 								success: res => {
 									if (res.data["data"]["status"] == 0){
@@ -266,8 +266,8 @@ export default {
 							};
 							if(that.product_id){
 								uni.request({
-									url: that.direction + "/device/detail?product_id=" + that.product_id + "&device_name=" + device_id_split[idx],
-									header: { "authorization": that.api_key},
+									url: that.direction + "/device/detail?product_id=" + that.product_id.split("&")[0] + "&device_name=" + device_id_split[idx].split("&")[0],
+									header: { "authorization": that.api_key.split(";")[0]},
 									method:'GET',//请求方式  或GET，必须为大写
 									success: res => {
 										if (res.data["data"]["status"] == 0){
@@ -300,9 +300,14 @@ export default {
 
 						// 数据内容
 						if(that.product_id){
+							var device_map = {};
+							for(var item_idx in that.device_ids.split(",")){
+								var item = that.device_ids.split(",")[item_idx].split("&");
+								if(item.length > 1){ device_map[item[0]] = item[1]; }
+							}
 							uni.request({
-								url: that.direction + "/datapoint/current-datapoints?product_id=" + that.product_id + "&device_name=" + that.device_ids,
-								header: { "authorization": that.api_key},
+								url: that.direction + "/datapoint/current-datapoints?product_id=" + that.product_id.split("&")[0] + "&device_name=" + (that.device_ids+',').replace(/\&(.*?)\,/g, '\,').slice(0,-1),
+								header: { "authorization": that.api_key.split(";")[0]},
 								method:'GET',//请求方式  或GET，必须为大写
 								success: res => {
 									console.log('返回', res.data["data"]);
@@ -354,25 +359,20 @@ export default {
 														device_data["datastreams"][in_idx]["value"]["battery"] = device_data["datastreams"][in_in_idx]["value"];
 													}
 
-													// 添加围栏信息
-													if(device_data["datastreams"][in_in_idx]["id"] == "erail"){
-														device_data["datastreams"][in_idx]["value"]["erail"] = device_data["datastreams"][in_in_idx]["value"];
-													}
-													if(device_data["datastreams"][in_in_idx]["id"] == "erail_flag"){
-														device_data["datastreams"][in_idx]["value"]["erail_flag"] = device_data["datastreams"][in_in_idx]["value"];
-													}
-
-													// // 扫描并添加自身st_time -- 后置-单独走kv
+													// // 扫描并添加自身st_time/围栏等信息 -- 后置-单独走kv
 												}
-												// 额外获取离线数据 k-v
+												// 额外获取离线数据 k-v device_map
 												uni.request({
-													url: that.direction_old + "/devices/1097281683/datapoints?datastream_id=st%"+that.product_id+"%"+device_data["id"]+"&limit=1",
-													header: { "api-key": "CSwWZsNXKRVJz=XUMES=qfO7p8Q="},
+													url: that.direction + "https://iot-api.heclouds.com/thingmodel/query-device-property?product_id="+that.product_id.split("&")[1]+"&device_name="+device_map[device_data["id"]],
+													header: { "authorization": that.api_key.split(";")[1]},
 													method:'GET',
-													success: res_old => {
-														if(res_old.data["data"]["count"] > 0){
-															device_data["datastreams"][in_idx]["value"]["st_time"] = res_old.data["data"]["datastreams"][0]["datapoints"][0]["value"].split(',');
-															// that.input_st_time[idx] = res_old.data["data"]["datastreams"][0]["datapoints"][0]["value"].split(',');
+													success: res_kv => {
+														for(var dp_idx in res_kv.data["data"]){
+															var value_name = res_kv.data["data"][dp_idx]["name"];
+															// k-v: 睡眠、围栏等离线信息
+															if(value_name in ["st_time", "erail", "erail_flag"]){
+																device_data["datastreams"][in_idx]["value"][value_name] = res_kv.data["data"][dp_idx]["value"] || '';
+															}
 														}
 													}
 												});
@@ -489,8 +489,8 @@ export default {
 			send(device_id, key_name, action, period=null) {
 				var that = this;
 				uni.request({
-					url: that.product_id?(that.direction + "/datapoint/synccmds?timeout=5&product_id=" + that.product_id + "&device_name=" + device_id):(that.direction_old + "/cmds?device_id=" + device_id),
-					header: that.product_id?{"authorization": that.api_key}:{ "api-key": that.api_key},
+					url: that.product_id?(that.direction + "/datapoint/synccmds?timeout=5&product_id=" + that.product_id.split("&")[0] + "&device_name=" + device_id):(that.direction_old + "/cmds?device_id=" + device_id),
+					header: that.product_id?{"authorization": that.api_key.split(";")[0]}:{ "api-key": that.api_key},
 					data: {
 						// key_name: JSON.stringify(action, that.trigger_time),
 						"key_name": key_name,
@@ -520,8 +520,8 @@ export default {
 				}
 				// console.log(params["context"]);
 				uni.request({
-					url: that.product_id?(that.direction + "/datapoint/synccmds?timeout=5&product_id=" + that.product_id + "&device_name=" + that.hid_usb):(that.direction_old + "/cmds?device_id=" + that.hid_usb),
-					header: that.product_id?{"authorization": that.api_key}:{ "api-key": that.api_key},
+					url: that.product_id?(that.direction + "/datapoint/synccmds?timeout=5&product_id=" + that.product_id.split("&")[0] + "&device_name=" + that.hid_usb):(that.direction_old + "/cmds?device_id=" + that.hid_usb),
+					header: that.product_id?{"authorization": that.api_key.split(";")[0]}:{ "api-key": that.api_key},
 					data: params,
 					method:'POST',//请求方式  或GET，必须为大写
 					success: res => {
@@ -727,8 +727,8 @@ export default {
 				that.polyline[0].points = [];
 				that.polyline[0].markers = [];
 				uni.request({
-					url: that.product_id?(that.direction + "/datapoint/history-datapoints?product_id="+that.product_id+"&device_name="+that.polykey+"&datastream_id=location&limit=6000&start="+that.timeStart.replace(" ", "T")+"&end="+that.timeEnd.replace(" ", "T")):(that.direction_old + "/devices/" + that.polykey + "/datapoints"),
-					header: that.product_id?{"authorization": that.api_key}:{ "api-key": that.api_key},
+					url: that.product_id?(that.direction + "/datapoint/history-datapoints?product_id="+that.product_id.split("&")[0]+"&device_name="+that.polykey+"&datastream_id=location&limit=6000&start="+that.timeStart.replace(" ", "T")+"&end="+that.timeEnd.replace(" ", "T")):(that.direction_old + "/devices/" + that.polykey + "/datapoints"),
+					header: that.product_id?{"authorization": that.api_key.split(";")[0]}:{ "api-key": that.api_key},
 					data: that.product_id?{}:{
 						'datastream_id': 'location',
 						'start': that.timeStart.replace(" ", "T"),
@@ -977,7 +977,7 @@ export default {
 									strokeWidth: "2",
 									strokeColor: (type==0)?"#2223FD":"#c85a64",
 									fillColor: (type==0)?"#9FA4F66a":"#c85a646a",
-									
+
 								}
 								for(var idx_point in tmp_info[type][idx_area]){
 									add_new_dict["points"].push({

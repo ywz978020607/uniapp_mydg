@@ -217,11 +217,11 @@
 
 							<label style="float:left" @click="showPwd">唯一密钥(点击显示)：</label>
 							<span v-html="'<br>'"></span>
-							<input v-model="input_val[2]" :password="showPassword" style="border:0.5px solid #378888; white-space: pre-wrap;">
+							<input maxlength="-1" v-model="input_val[2]" :password="showPassword" style="border:0.5px solid #378888; white-space: pre-wrap;">
 
 							<label style="float:left">设备名(旧版填设备ID！英文逗号分隔)：</label>
 							<span v-html="'<br>'"></span>
-							<input v-model="input_val[0]" style="border:0.5px solid #378888; white-space: pre-wrap;">
+							<input maxlength="-1" v-model="input_val[0]" style="border:0.5px solid #378888; white-space: pre-wrap;">
 
 							<label style="float:left">备注(多个则英文逗号分隔)：</label>
 							<span v-html="'<br>'"></span>
