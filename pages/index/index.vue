@@ -438,7 +438,7 @@
 							<div>
 								<span v-html="'<br>'"></span>
 								<label style="float:left">围栏设置</label>
-								<input v-model="rail_val[3]" style="border:0.5px solid #378888; white-space: pre-wrap;" />
+								<input maxlength="-1" v-model="rail_val[3]" style="border:0.5px solid #378888; white-space: pre-wrap;" />
 								</div>
 							<span v-html="'<br>'"></span>
 
