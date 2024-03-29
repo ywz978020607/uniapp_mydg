@@ -168,20 +168,20 @@
 										}]" style="width: 100%; height: 500rpx;"></map>
 										<!-- show-location -->
 										<div v-if="each['device_type'] == 4" class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
-											<input v-model="data_each.value.st_time[0]" placeholder="上报间隔-0关" style="width: 50%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
-											<button class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="set_onenet_http(key.substr(1,), 'st', data_each.value.st_time.join());">修改定时数据</button>
+											<input v-model="data_each.value.st[0]" placeholder="上报间隔-0关" style="width: 50%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
+											<button class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());">修改定时数据</button>
 										</div>
 
 										<div v-if="each['device_type'] == 5" class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
-											<input v-model="data_each.value.st_time[0]" placeholder="上报间隔-0关" style="width: 50%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
-											<button v-if="data_each.value.st_time[1] != null" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st_time = [data_each.value.st_time[0]]; set_onenet_http(key.substr(1,), 'st', data_each.value.st_time.join());delay_fresh(200);">关快查</button>
-											<button v-else class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st_time = [data_each.value.st_time[0]==''?0:data_each.value.st_time[0], 1.0, 0]; set_onenet_http(key.substr(1,), 'st', data_each.value.st_time.join());delay_fresh(200);">开快查</button>
-											<input v-if="data_each.value.st_time[1] != null" v-model="data_each.value.st_time[1]" placeholder="快查间隔" style="width: 30%;border:0.5px solid #378888;" type="text">
+											<input v-model="data_each.value.st[0]" placeholder="上报间隔-0关" style="width: 50%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
+											<button v-if="data_each.value.st[1] != null" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st = [data_each.value.st[0]]; set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());delay_fresh(200);">关快查</button>
+											<button v-else class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st = [data_each.value.st[0]==''?0:data_each.value.st[0], 1.0, 0]; set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());delay_fresh(200);">开快查</button>
+											<input v-if="data_each.value.st[1] != null" v-model="data_each.value.st[1]" placeholder="快查间隔" style="width: 30%;border:0.5px solid #378888;" type="text">
 										</div>
 										<div v-if="each['device_type'] == 5" class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
-											<button class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="set_onenet_http(key.substr(1,), 'st', data_each.value.st_time.join());">修改定时数据</button>
-											<button v-if="data_each.value.st_time[1] != null && data_each.value.st_time[2]!=1" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st_time[2] = 1; set_onenet_http(key.substr(1,), 'st', data_each.value.st_time.join()); delay_fresh(200);">立即查</button>
-											<button v-else-if="data_each.value.st_time[1] != null" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;">刷新等待</button>
+											<button class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());">修改定时数据</button>
+											<button v-if="data_each.value.st[1] != null && data_each.value.st[2]!=1" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st[2] = 1; set_onenet_http(key.substr(1,), 'st', data_each.value.st.join()); delay_fresh(200);">立即查</button>
+											<button v-else-if="data_each.value.st[1] != null" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;">刷新等待</button>
 										</div>
 
 										<div class="flex" style="white-space: pre-wrap;">

@@ -230,8 +230,10 @@ export default {
 								header: { "authorization": that.api_key.split(";")[0]},
 								method:'GET',//请求方式  或GET，必须为大写
 								success: res => {
-									if (res.data["data"]["status"] == 0){
-										temp_data["+"+res.data["data"]["name"]]["status"] = "";
+									if (res.data["code"] == 0){
+										device_id_split.forEach(function (element, index, array) {
+											if(element.indexOf(res.data["data"]["name"]) !== -1 ) temp_data["+"+element]["status"] = "";
+										});
 									}
 								}
 							});}
@@ -270,8 +272,10 @@ export default {
 									header: { "authorization": that.api_key.split(";")[0]},
 									method:'GET',//请求方式  或GET，必须为大写
 									success: res => {
-										if (res.data["data"]["status"] == 0){
-											temp_data["+"+res.data["data"]["name"]]["status"] = "";
+										if (res.data["code"] == 0){
+											device_id_split.forEach(function (element, index, array) {
+												if(element.indexOf(res.data["data"]["name"]) !== -1 ) temp_data["+"+element]["status"] = "";
+											});
 										}
 									}
 								});
@@ -300,11 +304,6 @@ export default {
 
 						// 数据内容
 						if(that.product_id){
-							var device_map = {};
-							for(var item_idx in that.device_ids.split(",")){
-								var item = that.device_ids.split(",")[item_idx].split("&");
-								if(item.length > 1){ device_map[item[0]] = item[1]; }
-							}
 							uni.request({
 								url: that.direction + "/datapoint/current-datapoints?product_id=" + that.product_id.split("&")[0] + "&device_name=" + (that.device_ids+',').replace(/\&(.*?)\,/g, '\,').slice(0,-1),
 								header: { "authorization": that.api_key.split(";")[0]},
@@ -313,15 +312,22 @@ export default {
 									console.log('返回', res.data["data"]);
 									for (var idx=0; idx < res.data["data"]["devices"].length; idx++){
 										var device_data = res.data["data"]["devices"][idx];
+										var device_data_dev_name = "";
+										device_id_split.forEach(function (element, index, array) {
+											if(element.indexOf(device_data["title"]) !== -1 ){
+												device_data_dev_name = element;
+											}
+										});
 										// 修改顺序 data0 data2 ..
 										device_data["datastreams"].sort((a, b)=>{
 											return (a["id"] > b["id"])? 1:-1;
 										});
 										// 删除隐藏pin
 										for(var n = device_data["datastreams"].length-1 ; n>=0 ; n--){
-											if(!that.check_seen_status(device_data["id"], device_data["datastreams"][n]["id"])) device_data["datastreams"].splice(n,1);
+											if(!that.check_seen_status(device_data_dev_name, device_data["datastreams"][n]["id"])) device_data["datastreams"].splice(n,1);
 										};
 										// 更新pin码、 坐标转换
+										var device_kv_in_idx = {};
 										for (var in_idx = 0; in_idx < device_data["datastreams"].length;in_idx++){
 											if(device_data["datastreams"][in_idx]["id"] == "pwd"){
 												var tmp_pwd = device_data["datastreams"][in_idx]["value"].toString();
@@ -346,7 +352,7 @@ export default {
 												device_data["datastreams"][in_idx]["value"]["lat"] = translate_coor.latitude;
 												device_data["datastreams"][in_idx]["value"]["lon"] = translate_coor.longitude;
 
-												device_data["datastreams"][in_idx]["value"]["st_time"] = ['']; //默认
+												device_data["datastreams"][in_idx]["value"]["st"] = ['']; //默认
 												for (var in_in_idx = 0; in_in_idx < device_data["datastreams"].length;in_in_idx++){
 													// 添加wifi名
 													if(device_data["datastreams"][in_in_idx]["id"] == "ssid"){
@@ -361,24 +367,26 @@ export default {
 
 													// // 扫描并添加自身st_time/围栏等信息 -- 后置-单独走kv
 												}
-												// 额外获取离线数据 k-v device_map
+												// 额外获取离线数据 k-v
+												device_kv_in_idx[device_data_dev_name] = in_idx; // 存储对应的索引 - 否则等到res后会变化
 												uni.request({
-													url: that.direction + "https://iot-api.heclouds.com/thingmodel/query-device-property?product_id="+that.product_id.split("&")[1]+"&device_name="+device_map[device_data["id"]],
+													url: that.direction + "/thingmodel/query-device-property?product_id="+that.product_id.split("&")[1]+"&device_name="+device_data_dev_name.split("&")[1],
 													header: { "authorization": that.api_key.split(";")[1]},
 													method:'GET',
-													success: res_kv => {
+													success: (res_kv) => {
 														for(var dp_idx in res_kv.data["data"]){
 															var value_name = res_kv.data["data"][dp_idx]["name"];
 															// k-v: 睡眠、围栏等离线信息
-															if(value_name in ["st_time", "erail", "erail_flag"]){
-																device_data["datastreams"][in_idx]["value"][value_name] = res_kv.data["data"][dp_idx]["value"] || '';
+															if(["st", "erail", "erail_flag"].indexOf(value_name) != -1){
+																device_data["datastreams"][device_kv_in_idx[device_data_dev_name]]["value"][value_name][0] = res_kv.data["data"][dp_idx]["value"] || '';
+																that.$forceUpdate(); // 异步后拉到数据后刷新
 															}
 														}
 													}
 												});
 											}
 										}
-										temp_data["+"+device_data["id"]]["datastreams"] = device_data["datastreams"];
+										temp_data["+"+device_data_dev_name]["datastreams"] = device_data["datastreams"];
 									}
 								}
 							});
@@ -426,7 +434,7 @@ export default {
 												device_data["datastreams"][in_idx]["value"]["lat"] = translate_coor.latitude;
 												device_data["datastreams"][in_idx]["value"]["lon"] = translate_coor.longitude;
 
-												device_data["datastreams"][in_idx]["value"]["st_time"] = ['']; //默认
+												device_data["datastreams"][in_idx]["value"]["st"] = ['']; //默认
 												for (var in_in_idx = 0; in_in_idx < device_data["datastreams"].length;in_in_idx++){
 													// 添加wifi名
 													if(device_data["datastreams"][in_in_idx]["id"] == "ssid"){
@@ -450,7 +458,7 @@ export default {
 
 													// 添加st_time
 													if(device_data["datastreams"][in_in_idx]["id"] == "st"){
-														device_data["datastreams"][in_idx]["value"]["st_time"] = device_data["datastreams"][in_in_idx]["value"].split(',');
+														device_data["datastreams"][in_idx]["value"]["st"] = device_data["datastreams"][in_in_idx]["value"].split(',');
 														// that.input_st_time[idx] = device_data["datastreams"][in_in_idx]["value"].split(',');
 													}
 												}
@@ -489,7 +497,7 @@ export default {
 			send(device_id, key_name, action, period=null) {
 				var that = this;
 				uni.request({
-					url: that.product_id?(that.direction + "/datapoint/synccmds?timeout=5&product_id=" + that.product_id.split("&")[0] + "&device_name=" + device_id):(that.direction_old + "/cmds?device_id=" + device_id),
+					url: that.product_id?(that.direction + "/datapoint/synccmds?timeout=5&product_id=" + that.product_id.split("&")[0] + "&device_name=" + device_id.split("&")[0]):(that.direction_old + "/cmds?device_id=" + device_id),
 					header: that.product_id?{"authorization": that.api_key.split(";")[0]}:{ "api-key": that.api_key},
 					data: {
 						// key_name: JSON.stringify(action, that.trigger_time),
@@ -1004,17 +1012,29 @@ export default {
 			set_onenet_http(device_id, key_name, value){
 				console.log("st_val", device_id, key_name, value);
 				var that = this;
-				var datastreams = [];
-				datastreams.push({
-						"id": that.product_id?(key_name+"%"+that.product_id+"%"+device_id):(key_name),
-						"datapoints": [{
-							"value": value
-						}]
-					})
+				var up_data = {};
+				if(that.product_id){
+					var datastreams = {}
+					datastreams[key_name] = {"value": value}
+					up_data = {
+						"id": "1",
+						"params":datastreams
+					}
+				}
+				else {
+					var datastreams = [];
+					datastreams.push({
+							"id": key_name,
+							"datapoints": [{
+								"value": value
+							}]
+						})
+					up_data = {'datastreams': datastreams};
+				}
 				uni.request({
-					url: that.product_id?(that.direction_old + "/devices/1097281683/datapoints"):(that.direction_old + "/devices/" + device_id + "/datapoints"),
-					header: that.product_id?{"api-key": "CSwWZsNXKRVJz=XUMES=qfO7p8Q="}:{ "api-key": that.api_key},
-					data: {'datastreams': datastreams},
+					url: that.product_id?("https://open.iot.10086.cn/fuse/http"+"/device/thing/property/post?topic=$sys/"+that.product_id.split("&")[1]+"/"+device_id.split("&")[1]+"/thing/property/post&protocol=http"):(that.direction_old + "/devices/" + device_id + "/datapoints"),
+					header: that.product_id?{"token": that.api_key.split(";")[1]}:{ "api-key": that.api_key},
+					data: up_data,
 					method:'POST',
 					success: res => {
 						// console.log('返回status', res.data["data"]);
