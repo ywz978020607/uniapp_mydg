@@ -523,6 +523,9 @@ export default {
 				if(mode == "kb") {
 					params["context"] = that.ench2Unicode(that.input_val[5]);
 				}
+				else if(mode == "dkb"){
+					params["context"] = [that.input_val[5]];
+				}
 				else {
 					params["speed"] = that.input_val[6];
 				}

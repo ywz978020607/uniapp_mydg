@@ -291,8 +291,11 @@
 								<label style="float:left">下发内容-支持中文：</label>
 								<span v-html="'<br>'"></span>
 								<input v-model="input_val[5]" style="border:0.5px solid #378888; white-space: pre-wrap;">
-								<button class="btn btn-primary" @click="send_usb('kb')" style="display: flex;flex-direction: column;align-items: center;">键盘发送</button>
-
+								<div class="flex" style="white-space: pre-wrap;">
+									 <button class="btn btn-primary" @click="send_usb('kb')" style="display: flex;flex-direction: column;align-items: center;">文本内容发送</button>
+									 <span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
+									 <button class="btn btn-primary" @click="send_usb('dkb')" style="display: flex;flex-direction: column;align-items: center;">特殊按键发送</button>
+								</div>
 								<!-- #ifdef H5 -->
 								<hr style="width: 100%; size: 3em;" />
 								<!-- #endif -->
