@@ -200,7 +200,17 @@
 									</div>
 								</div>
 
-
+								<div v-if="each['device_type'] == 'dmsg'">
+									<div v-for="(data_each,data_index) in each.datastreams" :obj="data_each.id" style="display: flex;flex-direction: column;align-items: center;">
+										<div v-if="data_each['id'].slice(0,3)=='msg'" style="display: flex;flex-direction: column;align-items: center;">
+											<p>{{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
+											<p>{{data_each['value']}}</p>
+											<button style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="get_dmsg_log(key.substr(1,));">查询历史消息</button>
+										 </div>
+										 <!-- <span v-html="'<br>'"></span> -->
+									</div>
+								</div>
+								
 								<!-- #ifdef H5 -->
 								<hr style="width: 100%; size: 3em;" />
 								<!-- #endif -->
@@ -447,6 +457,20 @@
 
 							<button class="btn btn-primary" @click="set_onenet_http(rail_val[2], 'erail', rail_val[3].replace(/\s+/g, ''));">提交/更新围栏设置</button>
 							<span v-html="'<br>'"></span>
+						</div>
+						
+						<!-- -4dmsg历史查询独立界面-需返回按钮 -->
+						<div v-if="seen_id==-4" style="display: inline-block;">
+							<button class="btn btn-primary" @click="restore_seen_id();">返回原主页</button>
+							<span v-html="'<br><br>'"></span>
+						    <div v-for="(data_each,data_index) in temp_data" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
+						        {{data_each["at"]}}
+								<span v-html="'<br>'"></span>
+								{{data_each["value"]}}
+								<span v-html="'<br>'"></span>
+								<span v-html="'<br>'"></span>
+								
+							</div>
 						</div>
 				</div>
 

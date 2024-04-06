@@ -1004,6 +1004,29 @@ export default {
 				return res;
 			},
 
+            // 独立子页面 -4
+            // dmsg查看
+            get_dmsg_log(device_id = ''){
+            	var that = this;
+            	that.seen_id = -4;
+            	console.log("dmsg查看");
+				var check_num = 20;
+            	uni.request({
+            		url: that.product_id?(that.direction + "/datapoint/history-datapoints?product_id="+that.product_id.split("&")[0]+"&device_name="+device_id.split("&")[0]+"&datastream_id=msg&limit="+check_num):(that.direction_old + "/devices/" + device_id + "/datapoints"),
+            		header: that.product_id?{"authorization": that.api_key.split(";")[0]}:{ "api-key": that.api_key},
+            		data: that.product_id?{}:{
+            			'datastream_id': 'msg',
+            			'limit': check_num
+            		},
+            		method:'GET',//请求方式  或GET，必须为大写
+            		success: res => {
+            			console.log('dmsg_log 返回', res.data["data"]);
+            			that.temp_data = res.data["data"]["datastreams"][0]["datapoints"];
+					}
+            	});
+            },
+            
+
 			// 配置导出和导入
 			export_info(){
 				this.info_dump = (JSON.stringify(this.input_val));
