@@ -1040,6 +1040,7 @@ export default {
 			},
 			// 设定离线变量
 			set_onenet_http(device_id, key_name, value){
+				var value = value.replace(/\s+/g, '');
 				console.log("st_val", device_id, key_name, value);
 				var that = this;
 				var up_data = {};

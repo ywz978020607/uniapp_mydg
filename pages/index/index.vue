@@ -335,7 +335,7 @@
 							<span v-html="'<br>'"></span>
 							<text class="flex flex-direction" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
 								暂不接受捐赠，您的bilibili点赞/关注是作者开发的动力~
-								version: 2024-0327
+								version: 2024-0512
 							</text>
 						</div>
 
@@ -455,7 +455,7 @@
 								</div>
 							<span v-html="'<br>'"></span>
 
-							<button class="btn btn-primary" @click="set_onenet_http(rail_val[2], 'erail', rail_val[3].replace(/\s+/g, ''));">提交/更新围栏设置</button>
+							<button class="btn btn-primary" @click="set_onenet_http(rail_val[2], 'erail', rail_val[3]);">提交/更新围栏设置</button>
 							<span v-html="'<br>'"></span>
 						</div>
 						
