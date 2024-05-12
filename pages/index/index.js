@@ -377,8 +377,12 @@ export default {
 														for(var dp_idx in res_kv.data["data"]){
 															var value_name = res_kv.data["data"][dp_idx]["name"];
 															// k-v: 睡眠、围栏等离线信息
-															if(["st", "erail", "erail_flag"].indexOf(value_name) != -1){
+															if(["st"].indexOf(value_name) != -1){
 																device_data["datastreams"][device_kv_in_idx[device_data_dev_name]]["value"][value_name][0] = res_kv.data["data"][dp_idx]["value"] || '';
+																that.$forceUpdate(); // 异步后拉到数据后刷新
+															}
+															if(["erail", "erail_flag"].indexOf(value_name) != -1){
+																device_data["datastreams"][device_kv_in_idx[device_data_dev_name]]["value"][value_name] = res_kv.data["data"][dp_idx]["value"] || '';
 																that.$forceUpdate(); // 异步后拉到数据后刷新
 															}
 														}
