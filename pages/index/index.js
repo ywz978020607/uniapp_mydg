@@ -301,6 +301,25 @@ export default {
 								}
 							});
 						}
+						else{
+							for (var idx=0; idx < device_id_split.length; idx++){
+								var tmp_device_id = device_id_split[idx];
+								uni.request({
+									url: that.direction + "/device/detail?product_id=" + that.product_id.split("&")[0] + "&device_name=" + device_id_split[idx].split("&")[0],
+									// url: "http://183.230.40.34/devices/status",
+									header: { "authorization": that.api_key.split(";")[0]},
+									method:'GET',//请求方式  或GET，必须为大写
+									success: res => {
+										// console.log('返回info', res.data);	
+										var online_flag = res.data["data"]["status"];
+										// console.log(online_flag);
+										if (online_flag != 1){
+											temp_data["+"+tmp_device_id]["status"] = ""; //离线
+										}
+									}
+								});
+							}
+						}
 
 						// 数据内容
 						if(that.product_id){
@@ -753,6 +772,13 @@ export default {
 					method:'GET',//请求方式  或GET，必须为大写
 					success: res => {
 						console.log('返回', res.data["data"]);
+						if(that.product_id){
+							for (var in_idx = 0; in_idx < parseInt(res.data["data"]["datastreams"][0]["datapoints"].length / 2);in_idx++){
+								var tmp_change = res.data["data"]["datastreams"][0]["datapoints"][in_idx];
+								res.data["data"]["datastreams"][0]["datapoints"][in_idx] = res.data["data"]["datastreams"][0]["datapoints"][res.data["data"]["datastreams"][0]["datapoints"].length - 1 - in_idx];
+								res.data["data"]["datastreams"][0]["datapoints"][res.data["data"]["datastreams"][0]["datapoints"].length - 1 - in_idx] = tmp_change;
+							}
+						}
 						// 坐标转换
 						for (var in_idx = 0; in_idx < res.data["data"]["datastreams"][0]["datapoints"].length;in_idx++){
 							var translate_coor = that.translate_gps(
