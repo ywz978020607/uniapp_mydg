@@ -274,7 +274,7 @@ export default {
 									success: res => {
 										if (res.data["code"] == 0){
 											device_id_split.forEach(function (element, index, array) {
-												if(element.indexOf(res.data["data"]["name"]) !== -1 ) temp_data["+"+element]["status"] = "";
+												if(res.data["data"]["status"] != 1 ) temp_data["+"+element]["status"] = "";
 											});
 										}
 									}
@@ -301,26 +301,7 @@ export default {
 								}
 							});
 						}
-						else{
-							for (var idx=0; idx < device_id_split.length; idx++){
-								var tmp_device_id = device_id_split[idx];
-								uni.request({
-									url: that.direction + "/device/detail?product_id=" + that.product_id.split("&")[0] + "&device_name=" + device_id_split[idx].split("&")[0],
-									// url: "http://183.230.40.34/devices/status",
-									header: { "authorization": that.api_key.split(";")[0]},
-									method:'GET',//请求方式  或GET，必须为大写
-									success: res => {
-										// console.log('返回info', res.data);	
-										var online_flag = res.data["data"]["status"];
-										// console.log(online_flag);
-										if (online_flag != 1){
-											temp_data["+"+tmp_device_id]["status"] = ""; //离线
-										}
-									}
-								});
-							}
-						}
-
+						
 						// 数据内容
 						if(that.product_id){
 							uni.request({
