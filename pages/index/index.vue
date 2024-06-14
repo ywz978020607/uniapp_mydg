@@ -156,7 +156,7 @@
 											<p v-if="data_each.value.battery">剩余电量数据: {{data_each.value.battery}}</p>
 											<p v-if="data_each.value.ssid">距离最近WIFI: {{data_each.value.ssid}}</p>
 											<!-- <p>{{data_each.value.lon}},{{data_each.value.lat}}</p> -->
-											<map id="map" :longitude="data_each.value.lon" :latitude="data_each.value.lat" :scale="16"
+											<map id="map" :enable-satellite="input_val[12]" :longitude="data_each.value.lon" :latitude="data_each.value.lat" :scale="16"
 											:markers="[{
 											id: data_index,
 											latitude: data_each.value.lat,longitude: data_each.value.lon,
@@ -256,6 +256,12 @@
 
 							<label style="float:left">PIN码设置：</label> <input v-model="input_val[11]" style="border:0.5px solid #378888; white-space: pre-wrap;">
 							<span v-html="'<br>'"></span>
+							
+							<label style="float:left">卫星图设置：</label>
+							<checkbox-group @change="change_stat(input_val, 12);">
+								<checkbox :value="1" :checked="input_val[12]"/>
+							</checkbox-group>
+							<span v-html="'<br>'"></span>
 
 							<button class="btn btn-primary" @click="change();">保存上述配置到本机</button>
 							<span v-html="'<br>'"></span>
@@ -345,7 +351,7 @@
 						<div v-if="seen_id==-1" style="display: inline-block;">
 							<button class="btn btn-primary" @click="restore_seen_id();">返回原主页</button>
 							<span v-html="'<br>'"></span>
-							<map id="map" :longitude="polyline[0].points[0].longitude" :latitude="polyline[0].points[0].latitude"
+							<map id="map" :enable-satellite="input_val[12]" :longitude="polyline[0].points[0].longitude" :latitude="polyline[0].points[0].latitude"
 										:include-points="polyline[0].points" :polyline="polyline" :markers="polyline[0].markers" style="width: 100%; height: 750rpx;"></map>
 							<div class="flex" style="white-space: pre-wrap;">
 								<uni-datetime-picker type="datetime" v-model="timeStart" @change="changeTime($event, 'start')" />
@@ -437,7 +443,7 @@
 								选点坐标<input v-model="rail_val[0]" placeholder="输入纬度" style="width: 35%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
 								<input v-model="rail_val[1]" placeholder="输入经度" style="width: 35%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
 							</div>
-							<map id="map"  :polygons="get_poly_list(rail_val[3])" :longitude="rail_val[1]" :latitude="rail_val[0]" :scale="16"
+							<map id="map" :enable-satellite="input_val[12]" :polygons="get_poly_list(rail_val[3])" :longitude="rail_val[1]" :latitude="rail_val[0]" :scale="16"
 								:markers="[{
 								id: 0,
 								latitude: rail_val[0],longitude: rail_val[1],

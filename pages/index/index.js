@@ -51,10 +51,12 @@ export default {
 			info_dump: '',
 			input_val: [null, null, null, null,
 				null, null, 5, null,
-				null, null, "", ""], //初始化, null可缺省
+				null, null, "", "", 
+				0], //初始化, null可缺省
 			// 0-设备ids，1-备注，2-apikey，3-触发秒数，4-hidusbid, [5-hidusb文本，6-hidusb速度]
 			// 7-类型[0-全IO,1-剪裁IO,2-红外控制,3-地图类型, 4-地图类型定时工作版]，
 			// 8-产品id, 9-补充配置的字符串输入, 10-邮箱号, 11-PIN码
+			// 12-卫星图模式
 
 			rail_val: [36.2332, 120.23423, "", "", 0], //围栏相关 - 经纬度，设备号，新规则"{0:[[[lat1,lon1],[lat2,lon2]], ...]}"], 触发规则
 			config_json: {}, // 补充配置
@@ -643,6 +645,7 @@ export default {
 				that.config_json = that.config_json?JSON.parse(that.config_json):{};
 				that.emails = uni.getStorageSync("emails");
 				that.pincode = uni.getStorageSync("pincode");
+				that.mapmode = uni.getStorageSync("mapmode");
 			},
 			//修改信息
 			change() {
@@ -671,6 +674,8 @@ export default {
 					};
 				}
 				uni.setStorageSync("pincode", that.input_val[11] || "");
+				
+				uni.setStorageSync("mapmode", that.input_val[12]);
 				// console.log("set done and get:", uni.getStorageSync("comments"));
 				// this.check_main();
 				if(alert_ok){
@@ -694,7 +699,12 @@ export default {
 				that.input_val[9] = JSON.stringify(that.config_json);
 				that.input_val[10] = that.emails;
 				that.input_val[11] = that.pincode;
+				that.input_val[12] = that.mapmode;
 				that.$forceUpdate();
+			},
+			// 修改状态
+			change_stat(list_target, idx){
+				list_target[idx] = (list_target[idx]+1) % 2;
 			},
 			// 复制id
 			copy(value){
@@ -1036,14 +1046,15 @@ export default {
 					}
             	});
             },
-            
 
 			// 配置导出和导入
 			export_info(){
+				console.log(this.input_val);
 				this.info_dump = (JSON.stringify(this.input_val));
 			},
 			load_info(){
 				this.input_val = (JSON.parse(this.info_dump));
+				this.change(); //保存修改
 			},
 			// 设定离线变量
 			set_onenet_http(device_id, key_name, value){
