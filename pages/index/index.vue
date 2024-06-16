@@ -206,7 +206,7 @@
 											<span v-html="'<br>'"></span>
 											<p>{{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
 											<p v-if="data_each['value'].split(',')[0]=='volte'">可听来电 - {{data_each['value'].split(',')[3]}}</p>
-											<p v-else>{{data_each['value']}}</p>
+											<p v-else>短信-{{data_each['value'].split(',')[2]}}</p>
 											<span v-html="'<br>'"></span>
 											<button style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="get_dmsg_log(key.substr(1,));">查询历史消息</button>
 										 </div>
