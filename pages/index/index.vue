@@ -23,6 +23,7 @@
 						<div v-if="seen_id==0" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
 							<hr style="width: 100%; size: 3em;" />
 							<div v-for="(each,key,index) in temp_data" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
+								<button style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="get_play_volte(key.substr(1,));">debug</button>
 								<p>备注: {{each["comments"]}} </p>
 								<div class="flex" style="white-space: pre-wrap;" @click="copy(key.substr(1,))">
 									设备: {{key.substr(1,)}} <span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span> <span v-if="each.device_type != 3 && each['status']=='在线'" style="color: red;">{{each["status"]}} </span><span v-else-if="each.device_type != 3" style="">{{each["status"]}} </span>

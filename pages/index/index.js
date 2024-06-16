@@ -83,6 +83,9 @@ export default {
 			manage_timer_v: {"pick_data": [], "picked": ["12:00", ], "pick_action": {"on":"常高", "off":"常低", "t_on":"触高", "t_off":"触低"},
 				"pick_duplicate": [{text: "仅一次",value: "once", is_selected: false},{text: "每天",value: "all", is_selected: false},{text: "周一",value: "1", is_selected: false},{text: "周二",value: "2", is_selected: false},{text: "周三",value: "3", is_selected: false},{text: "周四",value: "4", is_selected: false},{text: "周五",value: "5", is_selected: false},{text: "周六",value: "6", is_selected: false},{text: "周日",value: "7", is_selected: false}]
 			},
+			
+			volte_data: "", // new ArrayBuffer(153600),
+			innerAudioContext: uni.createInnerAudioContext(),
 		}
 	},
 	onLoad(options) {
@@ -1224,10 +1227,127 @@ export default {
 				}
 			},
 
-
-			// debug(e){
-			// 	console.log(e);
-			// }
+			volte_get(device_id, starttime = '', endtime = ''){
+				var that = this;
+				console.log("volte_get", device_id, starttime, endtime);
+				return new Promise((resolve, reject)=>{
+					uni.request({
+						url: that.direction_old + "/devices/" + device_id + "/datapoints",
+						header:{ "api-key": that.api_key},
+						data: {
+							'datastream_id': 'dat',
+							'start': starttime,
+							'end': endtime,
+							// 'limit': 24
+						},
+						method:'GET',//请求方式  或GET，必须为大写
+						success: (res) => {
+							var resultStr = [];
+							for(var idx=res.data["data"]["datastreams"][0]["datapoints"].length-1; idx>=0;idx--){
+								var rawStr = res.data["data"]["datastreams"][0]["datapoints"][idx]["value"];
+								for (var i = 0; i < rawStr.length; i = i + 2) {
+									var curCharCode = parseInt(rawStr.substr(i, 2), 16);
+									resultStr.push(curCharCode);
+								}
+							}
+							that.volte_data = new ArrayBuffer(resultStr.length);
+							for (var i = 0; i < resultStr.length; i++) {
+								that.volte_data[i] = resultStr[i];
+							}
+							resolve('suc')
+						}
+					});
+				})
+			},
+			async doGetVolte(device_id, wxAudio, starttime = '', endtime = '') {
+				var that = this;
+				const target = `${wx.env.USER_DATA_PATH}/tmp.wav`
+				
+				await this.volte_get(device_id, starttime, endtime);
+				
+				let fileManager = uni.getFileSystemManager()
+				
+				let view = this.encodeWAV(that.volte_data, 1, 16000);
+				// console.log("finish::", view);
+				return new Promise((resolve, reject)=>{
+					fileManager.writeFile({
+						data: view.buffer,
+						filePath: target,
+						encoding: 'binary', // add
+						success: res => {
+							// 拿封装好的文件进行操作
+							wxAudio.src = target;
+							resolve('suc')
+						},
+						fail: (res)=>{
+							console.log("fail: ", res);
+						}
+					})
+				})
+			},
+			async get_play_volte(device_id, starttime = '', endtime = ''){
+				var that = this;
+				that.innerAudioContext.autoplay = true;
+				that.innerAudioContext.onCanplay((res) => {
+					that.innerAudioContext.play()
+				});
+				await this.doGetVolte(device_id, that.innerAudioContext,starttime,endtime);
+				that.innerAudioContext.play();
+				
+				// console.log(that.innerAudioContext.src)
+				
+			},
+			
+			// 一些工具函数，将数据进行转码、封装
+			encodeWAV(samples, numChannels, sampleRate) {
+				var buffer = new ArrayBuffer(44 + samples.byteLength);
+				var view = new DataView(buffer);
+				/* RIFF identifier */
+				this.writeString(view, 0, 'RIFF');
+				/* RIFF chunk length */
+				view.setUint32(4, 36 + samples.byteLength, true);
+				/* RIFF type */
+				this.writeString(view, 8, 'WAVE');
+				/* format chunk identifier */
+				this.writeString(view, 12, 'fmt ');
+				/* format chunk length */
+				view.setUint32(16, 16, true);
+				/* sample format (raw) */
+				view.setUint16(20, 1, true);
+				/* channel count */
+				view.setUint16(22, numChannels, true);
+				/* sample rate */
+				view.setUint32(24, sampleRate, true);
+				/* byte rate (sample rate * block align) */
+				view.setUint32(28, sampleRate * numChannels * 2, true); // 16位采样
+				/* block align (channel count * bytes per sample) */
+				view.setUint16(32, numChannels * 2, true); // 16位采样
+				/* bits per sample */
+				view.setUint16(34, 16, true); // 16位采样
+				/* data chunk identifier */
+				this.writeString(view, 36, 'data');
+				/* data chunk length */
+				view.setUint32(40, samples.byteLength, true);
+				
+				this.copyBytes(view, 44, samples);
+			
+				return view;
+			},
+			copyBytes(output, offset, input) {
+				// const dataView = new DataView(input);
+				for (var i = 0; i < input.byteLength; i++, offset++) {
+					output.setInt8(offset, input[i]);
+				}
+				// const dataView = new DataView(input);
+				// for (var i = 0; i < input.byteLength; i++, offset++) {
+				// 	output.setInt8(offset, dataView.getInt8(i));
+				// }
+			},
+			writeString(view, offset, string) {
+				for (var i = 0; i < string.length; i++) {
+					view.setUint8(offset + i, string.charCodeAt(i));
+				}
+			},
 	}
 
 }
