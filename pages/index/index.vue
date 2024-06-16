@@ -23,7 +23,6 @@
 						<div v-if="seen_id==0" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
 							<hr style="width: 100%; size: 3em;" />
 							<div v-for="(each,key,index) in temp_data" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
-								<button style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="get_play_volte(key.substr(1,));">debug</button>
 								<p>备注: {{each["comments"]}} </p>
 								<div class="flex" style="white-space: pre-wrap;" @click="copy(key.substr(1,))">
 									设备: {{key.substr(1,)}} <span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span> <span v-if="each.device_type != 3 && each['status']=='在线'" style="color: red;">{{each["status"]}} </span><span v-else-if="each.device_type != 3" style="">{{each["status"]}} </span>
@@ -204,8 +203,11 @@
 								<div v-if="each['device_type'] == 'dmsg'">
 									<div v-for="(data_each,data_index) in each.datastreams" :obj="data_each.id" style="display: flex;flex-direction: column;align-items: center;">
 										<div v-if="data_each['id'].slice(0,3)=='msg'" style="display: flex;flex-direction: column;align-items: center;">
+											<span v-html="'<br>'"></span>
 											<p>{{data_each["at"].slice(0,10)+' ' +data_each["at"].slice(11,19)}}</p>
-											<p>{{data_each['value']}}</p>
+											<p v-if="data_each['value'].split(',')[0]=='volte'">可听来电 - {{data_each['value'].split(',')[3]}}</p>
+											<p v-else>{{data_each['value']}}</p>
+											<span v-html="'<br>'"></span>
 											<button style="height: 100rpx;font-size: 35rpx;" class="btn btn-primary" @click="get_dmsg_log(key.substr(1,));">查询历史消息</button>
 										 </div>
 										 <!-- <span v-html="'<br>'"></span> -->
@@ -471,11 +473,17 @@
 							<button class="btn btn-primary" @click="restore_seen_id();">返回原主页</button>
 							<span v-html="'<br><br>'"></span>
 						    <div v-for="(data_each,data_index) in temp_data" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
-						        {{data_each["at"]}}
+						        <p style="color: orangered">{{data_each["at"]}}</p>
 								<span v-html="'<br>'"></span>
-								{{data_each["value"]}}
+								<p v-if="data_each['value'].split(',')[0]=='volte'"><button @click="get_play_volte(_tmp_seen_detail_device,data_each['value']);">播放语音信息-{{data_each['value'].split(',')[3]}}</button></p>
+								<p v-else @click="showToast(data_each['value'])">{{data_each['value'].split(',')[2]}}</p>
 								<span v-html="'<br>'"></span>
-								<span v-html="'<br>'"></span>
+								<!-- #ifdef H5 -->
+								<hr style="width: 100%; size: 3em;" />
+								<!-- #endif -->
+								<!-- #ifndef H5 -->
+								<view class="divider" />
+								<!-- #endif -->
 								
 							</div>
 						</div>

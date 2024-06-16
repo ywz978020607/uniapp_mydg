@@ -84,6 +84,7 @@ export default {
 				"pick_duplicate": [{text: "仅一次",value: "once", is_selected: false},{text: "每天",value: "all", is_selected: false},{text: "周一",value: "1", is_selected: false},{text: "周二",value: "2", is_selected: false},{text: "周三",value: "3", is_selected: false},{text: "周四",value: "4", is_selected: false},{text: "周五",value: "5", is_selected: false},{text: "周六",value: "6", is_selected: false},{text: "周日",value: "7", is_selected: false}]
 			},
 			
+			_tmp_seen_detail_device: "",
 			volte_data: "", // new ArrayBuffer(153600),
 			innerAudioContext: uni.createInnerAudioContext(),
 		}
@@ -1032,6 +1033,7 @@ export default {
             // dmsg查看
             get_dmsg_log(device_id = ''){
             	var that = this;
+				that._tmp_seen_detail_device = device_id;
             	that.seen_id = -4;
             	console.log("dmsg查看");
 				var check_num = 20;
@@ -1243,7 +1245,7 @@ export default {
 						method:'GET',//请求方式  或GET，必须为大写
 						success: (res) => {
 							var resultStr = [];
-							for(var idx=res.data["data"]["datastreams"][0]["datapoints"].length-1; idx>=0;idx--){
+							for(var idx=0; idx<res.data["data"]["datastreams"][0]["datapoints"].length;idx++){
 								var rawStr = res.data["data"]["datastreams"][0]["datapoints"][idx]["value"];
 								for (var i = 0; i < rawStr.length; i = i + 2) {
 									var curCharCode = parseInt(rawStr.substr(i, 2), 16);
@@ -1285,13 +1287,13 @@ export default {
 					})
 				})
 			},
-			async get_play_volte(device_id, starttime = '', endtime = ''){
+			async get_play_volte(device_id, stat_info=''){
 				var that = this;
 				that.innerAudioContext.autoplay = true;
 				that.innerAudioContext.onCanplay((res) => {
 					that.innerAudioContext.play()
 				});
-				await this.doGetVolte(device_id, that.innerAudioContext,starttime,endtime);
+				await this.doGetVolte(device_id, that.innerAudioContext,stat_info.split(',')[1], stat_info.split(',')[2]);
 				that.innerAudioContext.play();
 				
 				// console.log(that.innerAudioContext.src)
@@ -1347,6 +1349,9 @@ export default {
 				for (var i = 0; i < string.length; i++) {
 					view.setUint8(offset + i, string.charCodeAt(i));
 				}
+			},
+			showToast(info){
+				uni.showToast({title: info,icon: 'none'});
 			},
 	}
 
