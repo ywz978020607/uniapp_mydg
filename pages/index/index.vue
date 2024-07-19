@@ -168,19 +168,19 @@
 										}]" style="width: 100%; height: 500rpx;"></map>
 										<!-- show-location -->
 										<div v-if="each['device_type'] == 4" class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
-											<input v-model="data_each.value.st[0]" placeholder="上报间隔-0关" style="width: 50%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
-											<button class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());">修改定时数据</button>
+											<input v-model="data_each.value.st[0]" placeholder="定时报间隔-0关" style="width: 50%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
+											<button class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());">修改上报配置</button>
 										</div>
 
 										<div v-if="each['device_type'] == 5" class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
-											<input v-model="data_each.value.st[0]" placeholder="上报间隔-0关" style="width: 50%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
-											<button v-if="data_each.value.st[1] != null" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st = [data_each.value.st[0]]; set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());delay_fresh(200);">关快查</button>
-											<button v-else class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st = [data_each.value.st[0]==''?0:data_each.value.st[0], 1.0, 0]; set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());delay_fresh(200);">开快查</button>
-											<input v-if="data_each.value.st[1] != null" v-model="data_each.value.st[1]" placeholder="快查间隔" style="width: 30%;border:0.5px solid #378888;" type="text">
+											<input v-model="data_each.value.st[0]" placeholder="定时报间隔-0关" style="width: 45%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
+											<button v-if="data_each.value.st[1] != null" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st = [data_each.value.st[0]]; set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());delay_fresh(200);">关指令查</button>
+											<button v-else class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st = [data_each.value.st[0]==''?0:data_each.value.st[0], 1.0, 0]; set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());delay_fresh(200);">开指令查</button>
+											<input v-if="data_each.value.st[1] != null" v-model="data_each.value.st[1]" placeholder="指令查间隔" style="width: 30%;border:0.5px solid #378888;" type="text">
 										</div>
 										<div v-if="each['device_type'] == 5" class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
-											<button class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());">修改定时数据</button>
-											<button v-if="data_each.value.st[1] != null && data_each.value.st[2]!=1" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st[2] = 1; set_onenet_http(key.substr(1,), 'st', data_each.value.st.join()); delay_fresh(200);">立即查</button>
+											<button class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());">修改报查配置</button>
+											<button v-if="data_each.value.st[1] != null && data_each.value.st[2]!=1" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st[2] = 1; set_onenet_http(key.substr(1,), 'st', data_each.value.st.join()); delay_fresh(200);">发指令</button>
 											<button v-else-if="data_each.value.st[1] != null" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;">刷新等待</button>
 										</div>
 
@@ -224,6 +224,42 @@
 						</div>
 
 						<div v-if="seen_id==1" style="display: inline-block;">
+							
+							<div style="border:1px solid #532222; white-space: pre-wrap;">
+							<div class="flex" style="white-space: pre-wrap;">
+								<button class="btn btn-secondary" @click="export_info();">一键导出配置</button>
+								<span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
+								<button class="btn btn-secondary" @click="load_info();">一键导入配置</button>
+							</div>
+							<span v-html="'<br>'"></span>
+							<label style="float:left;">一键配置框: </label>
+							<input maxlength="-1" v-model="info_dump" style="border:0.5px solid #378888; white-space: pre-wrap;">
+							</div>
+							
+							<span v-html="'<br>'"></span><span v-html="'<br>'"></span>
+							
+							
+							<div style="border:1px solid #532222; white-space: pre-wrap;">
+								<label style="float:left">卫星图设置：</label>
+								<checkbox-group @change="change_stat(input_val, 12);">
+									<checkbox :value="1" :checked="input_val[12]"/>
+								</checkbox-group>
+								<span v-html="'<br>'"></span>
+								<label style="float:left">PIN码(动态密码)：</label> <input v-model="input_val[11]" style="border:0.5px solid #378888; white-space: pre-wrap;">
+							</div>
+							<span v-html="'<br>'"></span>
+							
+							
+							
+							<span v-html="'<br>'"></span><span v-html="'<br>'"></span>
+							
+							<label style="float:left">详细参数：</label>
+							<checkbox-group @change="enable_detail_view = (enable_detail_view+1)%2;">
+								<checkbox :value="1" :checked="enable_detail_view"/>
+							</checkbox-group>
+							<span v-html="'<br>'"></span>
+							
+							<div v-if="enable_detail_view==1">
 							<label style="float:left">唯一产品ID(旧版接入则不填此项！)</label>
 							<span v-html="'<br>'"></span>
 							<input v-model="input_val[8]" style="border:0.5px solid #378888; white-space: pre-wrap;">
@@ -257,14 +293,6 @@
 							<input maxlength="-1" v-model="input_val[9]" style="border:0.5px solid #378888; white-space: pre-wrap;">
 							<span v-html="'<br>'"></span>
 
-							<label style="float:left">PIN码设置：</label> <input v-model="input_val[11]" style="border:0.5px solid #378888; white-space: pre-wrap;">
-							<span v-html="'<br>'"></span>
-							
-							<label style="float:left">卫星图设置：</label>
-							<checkbox-group @change="change_stat(input_val, 12);">
-								<checkbox :value="1" :checked="input_val[12]"/>
-							</checkbox-group>
-							<span v-html="'<br>'"></span>
 
 							<button class="btn btn-primary" @click="change();">保存上述配置到本机</button>
 							<span v-html="'<br>'"></span>
@@ -276,15 +304,9 @@
 							<!-- #ifndef H5 -->
 							定时功能需使用网页版，详情见小程序说明
 							<!-- #endif -->
-
-							<span v-html="'<br>'"></span><span v-html="'<br>'"></span>
-							<div class="flex" style="white-space: pre-wrap;">
-								<button class="btn btn-secondary" @click="export_info();">一键导出配置</button>
-								<span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
-								<button class="btn btn-secondary" @click="load_info();">一键导入配置</button>
+							
 							</div>
-							<label style="float:left">一键配置内容: </label>
-							<input maxlength="-1" v-model="info_dump" style="border:0.5px solid #378888; white-space: pre-wrap;">
+							
 						</div>
 
 						<div v-if="seen_id==2" style="display: inline-block;">
@@ -326,25 +348,27 @@
 						</div>
 
 						<div v-if="seen_id==3" style="display: inline-block;">
+							<text class="flex flex-direction" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
+								联系方式: 可通过bilibili平台关注[摸鱼大鸽]，也可添加开发者微信号: moyudage123 联系定制、邀请进交流群等。
+								购买方式: 可某宝搜索“合羽计算科技”购买咨询~
+								团队承接物联网软硬件全栈研发定制、FPGA/MCU/嵌入式/小程序/推荐&图像算法工程等，欢迎来单咨询
+							</text>
+							<span v-html="'<br>'"></span>
+							
 							<text>
 								小程序由摸鱼大鸽开发，用于广域网下的远程控制/定位追踪/电子围栏/红外控制/广域HID注入等功能，已部署案例：电脑远程开机、车库门控制、随车定位追踪、家居控制、短信接码等。
 
-								· 补充：定时功能由于使用了三方后端，小程序不支持，需使用网页版应用，浏览器打开http://api.moyudage.top:8880/files/mydgh5/ 其他部分与小程序用法完全相同。
+								· 补充：极个别特殊功能如定时功能由于使用了三方后端，需使用网页版应用，浏览器打开http://api.moyudage.top:8880/files/mydgh5/ 其他部分与小程序用法完全相同。
 							</text>
 
 							<span v-html="'<br>'"></span>
 							<text class="flex flex-direction" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
-								本小程序无三方后端，小程序直连中国移动onenet物联网平台(中国移动免费平台)，用户可自行注册绑定，教程可参考
-								https://www.bilibili.com/read/cv22804787 ，所有数据保存在小程序本地缓存中，若有备份需要可以一键导出/导入，小程序支持下拉刷新和定时刷新。
-							</text>
-							<span v-html="'<br>'"></span>
-							<text class="flex flex-direction" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
-								联系方式: 可通过bilibili平台关注[摸鱼大鸽]，也可添加开发者微信号: moyudage123 联系定制、邀请进交流群等。
+								本小程序无三方后端，小程序直连中国移动onenet物联网平台(中国移动免费平台)，用户可自行注册绑定，所有数据保存在小程序本地缓存中，若有备份需要可以一键导出/导入，小程序支持下拉刷新和定时刷新。
 							</text>
 							<span v-html="'<br>'"></span>
 							<text class="flex flex-direction" style="width: 100%; display: flex;flex-direction: column;align-items: center;">
 								暂不接受捐赠，您的bilibili点赞/关注是作者开发的动力~
-								version: 2024-0512
+								version: 2024-0719
 							</text>
 						</div>
 
