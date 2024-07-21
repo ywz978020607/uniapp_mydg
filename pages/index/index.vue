@@ -246,6 +246,8 @@
 								</checkbox-group>
 								<span v-html="'<br>'"></span>
 								<label style="float:left">PIN码(动态密码)：</label> <input v-model="input_val[11]" style="border:0.5px solid #378888; white-space: pre-wrap;">
+								<span v-html="'<br>'"></span>
+								<button class="btn btn-secondary" style="width: 70%;" @click="change();">保存上述配置到本机</button>
 							</div>
 							<span v-html="'<br>'"></span>
 							
