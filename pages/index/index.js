@@ -1354,6 +1354,29 @@ export default {
 			showToast(info){
 				uni.showToast({title: info,icon: 'none'});
 			},
+			calc_percent_by_voltage(x){
+				const arr = [3.318203744375, 3.39022274, 3.448861355625, 3.49542656, 3.532748046875, 3.56435406, 3.593802918125, 3.6241702399999998, 3.657691869375, 3.6955625, 3.7378900006249998, 3.78380544, 3.831728811875, 3.8797904599999993, 3.926408203124999, 3.9710201599999975, 4.014973274374999, 4.062567539999998, 4.122255925624995, 4.16];
+				let left = 0;  
+				let right = arr.length - 1;  
+
+				while (left <= right) {  
+				const mid = Math.floor((left + right) / 2);  
+
+				if (arr[mid] < x) {  
+					left = mid + 1; // 搜索右半部分  
+				} else {  
+					right = mid - 1; // 搜索左半部分  
+				}  
+				}  
+
+				// 处理边界情况  
+				if (left === 0 && (arr.length === 0 || arr[0] >= x)) {  
+				// 如果数组为空或x小于数组的第一个元素，返回数组长度表示插入位置  
+					left = arr.length;  
+				}
+				
+				return 5 * left;
+			},
 	}
 
 }
