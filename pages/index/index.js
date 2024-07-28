@@ -672,7 +672,7 @@ export default {
 				if(that.input_val[11]){
 					if(!that.check_update_pin(that.res_pincode, that.pincode, that.input_val[11], that.device_ids)){
 						uni.showToast({
-							title: "原pin码不正确",
+							title: "设置完成，请回主页刷新",
 							icon: "none"
 						})
 						alert_ok = false;
