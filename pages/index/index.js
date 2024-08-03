@@ -24,7 +24,7 @@ export default {
 			// username: "",
 			intervalId: null,
 			seen_id_tags: ["远程物联", "修改信息", "广域HID", "小程序介绍及联系方式"],
-			seen_id: 0,
+			seen_id: 1,
 			// 地图轨迹
 			timeStart: '',
 			timeEnd: '',
