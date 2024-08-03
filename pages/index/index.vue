@@ -337,7 +337,7 @@
 								<div class="flex" style="white-space: pre-wrap;">
 									 <button class="btn btn-primary" @click="send_usb('kb')" style="display: flex;flex-direction: column;align-items: center;">文本内容发送</button>
 									 <span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
-									 <button class="btn btn-primary" @click="send_usb('dkb')" style="display: flex;flex-direction: column;align-items: center;">特殊按键发送</button>
+									 <button class="btn btn-primary" @click="send_usb('dkb');" style="display: flex;flex-direction: column;align-items: center;">特殊按键发送</button>
 								</div>
 								<!-- #ifdef H5 -->
 								<hr style="width: 100%; size: 3em;" />
@@ -347,6 +347,10 @@
 								<!-- #endif -->
 
 							</div>
+							<span v-html="'<br>'"></span>
+							<span v-html="'<br>'"></span>
+							<span v-html="'<br>'"></span>
+							<button class="btn btn-primary" @click="change();">保存上述配置到本机</button>
 						</div>
 
 						<div v-if="seen_id==3" style="display: inline-block;">

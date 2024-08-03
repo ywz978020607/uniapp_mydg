@@ -19,6 +19,7 @@ export default {
 			comments: "",
 			trigger_time: "",
 			hid_usb: "",
+			hid_usb_context: "",
 			// canvasnamelist:["canvasGauge0","canvasGauge1"],
 			// username: "",
 			intervalId: null,
@@ -644,6 +645,7 @@ export default {
 				that.comments = uni.getStorageSync("comments");
 				that.trigger_time = uni.getStorageSync("trigger_time");
 				that.hid_usb = uni.getStorageSync("hid_usb");
+				that.hid_usb_context = uni.getStorageSync("hid_usb_context");
 				that.device_type = uni.getStorageSync("device_type");
 				that.product_id = uni.getStorageSync("product_id");
 				that.config_json = uni.getStorageSync("config_json");
@@ -662,6 +664,7 @@ export default {
 				if(that.input_val[2]){uni.setStorageSync("api_key", that.input_val[2]);}
 				if(that.input_val[3]){uni.setStorageSync("trigger_time", that.input_val[3]);}
 				if(that.input_val[4]){uni.setStorageSync("hid_usb", that.input_val[4]);}
+				if(that.input_val[5]){uni.setStorageSync("hid_usb_context", that.input_val[5]);}
 				if(that.input_val[7]){uni.setStorageSync("device_type", that.input_val[7]);}
 				uni.setStorageSync("product_id", that.input_val[8]);
 				if(that.input_val[9]){
@@ -699,6 +702,7 @@ export default {
 				that.input_val[2] = that.api_key;
 				that.input_val[3] = that.trigger_time;
 				that.input_val[4] = that.hid_usb;
+				that.input_val[5] = that.hid_usb_context;
 				that.input_val[7] = that.device_type;
 				that.input_val[8] = that.product_id;
 				that.input_val[9] = JSON.stringify(that.config_json);
