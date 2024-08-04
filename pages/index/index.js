@@ -646,6 +646,7 @@ export default {
 				that.trigger_time = uni.getStorageSync("trigger_time");
 				that.hid_usb = uni.getStorageSync("hid_usb");
 				that.hid_usb_context = uni.getStorageSync("hid_usb_context");
+				that.input_val[5] = that.hid_usb_context; // 特殊 - 跨页面显示 且仅本地缓存
 				that.device_type = uni.getStorageSync("device_type");
 				that.product_id = uni.getStorageSync("product_id");
 				that.config_json = uni.getStorageSync("config_json");
