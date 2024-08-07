@@ -1382,7 +1382,7 @@ export default {
 					left = arr.length;  
 				}
 				
-				return 5 * left;
+				return parseInt((100/(arr.length - 1)) * left);
 			},
 	}
 
