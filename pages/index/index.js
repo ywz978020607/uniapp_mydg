@@ -1376,13 +1376,13 @@ export default {
 				}  
 				}
 
-				// 处理边界情况  
-				if (left === 0 && (arr.length === 0 || arr[0] >= x)) {  
-				// 如果数组为空或x小于数组的第一个元素，返回数组长度表示插入位置  
-					left = arr.length;  
-				}
+				// // 处理边界情况  
+				// if (left === 0 && (arr.length === 0 || arr[0] >= x)) {  
+				// // 如果数组为空或x小于数组的第一个元素，返回数组长度表示插入位置  
+				// 	left = arr.length;  
+				// }
 				
-				return parseInt((100/(arr.length - 1)) * left);
+				return parseInt((100/(arr.length)) * left);
 			},
 	}
 
