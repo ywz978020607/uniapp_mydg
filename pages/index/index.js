@@ -361,6 +361,7 @@ export default {
 												device_data["datastreams"][in_idx]["value"]["lon"] = translate_coor.longitude;
 
 												device_data["datastreams"][in_idx]["value"]["st"] = ['']; //默认
+												device_data["datastreams"][in_idx]["value"]["m_conf"] = ['']; //默认
 												for (var in_in_idx = 0; in_in_idx < device_data["datastreams"].length;in_in_idx++){
 													// 添加wifi名
 													if(device_data["datastreams"][in_in_idx]["id"] == "ssid"){
@@ -385,7 +386,7 @@ export default {
 														for(var dp_idx in res_kv.data["data"]){
 															var value_name = res_kv.data["data"][dp_idx]["name"];
 															// k-v: 睡眠、围栏等离线信息
-															if(["st"].indexOf(value_name) != -1){
+															if(["st","m_conf"].indexOf(value_name) != -1){
 																device_data["datastreams"][device_kv_in_idx[device_data_dev_name]]["value"][value_name] = (res_kv.data["data"][dp_idx]["value"] || '').split(',');
 																that.$forceUpdate(); // 异步后拉到数据后刷新
 															}
@@ -447,6 +448,7 @@ export default {
 												device_data["datastreams"][in_idx]["value"]["lon"] = translate_coor.longitude;
 
 												device_data["datastreams"][in_idx]["value"]["st"] = ['']; //默认
+												device_data["datastreams"][in_idx]["value"]["m_conf"] = ['']; //默认
 												for (var in_in_idx = 0; in_in_idx < device_data["datastreams"].length;in_in_idx++){
 													// 添加wifi名
 													if(device_data["datastreams"][in_in_idx]["id"] == "ssid"){
@@ -471,6 +473,11 @@ export default {
 													// 添加st_time
 													if(device_data["datastreams"][in_in_idx]["id"] == "st"){
 														device_data["datastreams"][in_idx]["value"]["st"] = device_data["datastreams"][in_in_idx]["value"].split(',');
+														// that.input_st_time[idx] = device_data["datastreams"][in_in_idx]["value"].split(',');
+													}
+													// 添加m_conf
+													if(device_data["datastreams"][in_in_idx]["id"] == "m_conf"){
+														device_data["datastreams"][in_idx]["value"]["m_conf"] = device_data["datastreams"][in_in_idx]["value"].split(',');
 														// that.input_st_time[idx] = device_data["datastreams"][in_in_idx]["value"].split(',');
 													}
 												}

@@ -167,23 +167,6 @@
 											<!-- #endif -->
 										}]" style="width: 100%; height: 500rpx;"></map>
 										<!-- show-location -->
-										<div v-if="each['device_type'] == 4" class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
-											<input v-model="data_each.value.st[0]" placeholder="定时报间隔-0关" style="width: 50%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
-											<button class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());">修改上报配置</button>
-										</div>
-
-										<div v-if="each['device_type'] == 5" class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
-											<input v-model="data_each.value.st[0]" placeholder="定时报间隔-0关" style="width: 45%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
-											<button v-if="data_each.value.st[1] != null" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st = [data_each.value.st[0]]; set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());delay_fresh(200);">关指令查</button>
-											<button v-else class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st = [data_each.value.st[0]==''?0:data_each.value.st[0], 1.0, 0]; set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());delay_fresh(200);">开指令查</button>
-											<input v-if="data_each.value.st[1] != null" v-model="data_each.value.st[1]" placeholder="指令查间隔" style="width: 30%;border:0.5px solid #378888;" type="text">
-										</div>
-										<div v-if="each['device_type'] == 5" class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
-											<button class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());">修改报查配置</button>
-											<button v-if="data_each.value.st[1] != null && data_each.value.st[2]!=1" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="data_each.value.st[2] = 1; set_onenet_http(key.substr(1,), 'st', data_each.value.st.join()); delay_fresh(200);">发指令</button>
-											<button v-else-if="data_each.value.st[1] != null" class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;">刷新等待</button>
-										</div>
-
 										<div class="flex" style="white-space: pre-wrap;">
 											<uni-datetime-picker type="datetime" v-model="timeStart" @change="changeTime($event, 'start')" />
 											-
@@ -196,6 +179,32 @@
 											<span v-html="'&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
 											<button class="btn btn-secondary" @click="open_location(data_each.value.lat, data_each.value.lon);">位置导航</button>
 										</div>
+										
+										<div v-if="each['device_type'] == 4" class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
+											<input v-model="data_each.value.st[0]" placeholder="定时报间隔-0关" style="width: 50%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
+											<button class="btn btn-secondary" style="height: 50rpx;font-size: 24rpx;" @click="set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());">修改上报配置</button>
+										</div>
+										
+										<div v-if="each['device_type'] == 5" class="flex" style="display: flex; align-items: center; margin-bottom: 10px; text-align: center; margin-top: 10px; ">
+											<span style="width: 20%; white-space: pre-wrap;">定时报</span>
+											<input v-model="data_each.value.st[0]" placeholder="定时报间隔-0关" style="width: 20%;border:0.5px solid #378888; white-space: pre-wrap;" type="text"/>
+											<span v-if="data_each.value.st[1] != null" style="width: 20%; white-space: pre-wrap;">指令查</span>
+											<input v-if="data_each.value.st[1] != null" v-model="data_each.value.st[1]" placeholder="指令查间隔" style="width: 20%;border:0.5px solid #378888;" type="text">
+											<button class="btn btn-secondary" style="margin-right: auto;width: 35%; background-color: bisque;color:black; height: 50rpx;font-size: 24rpx;" @click="set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());">保存配置(分钟)</button>
+										</div>
+										
+										<div v-if="each['device_type'] == 5" class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
+											<button v-if="data_each.value.st[1] != null" class="btn btn-secondary" style="background-color: #532222;height: 50rpx;font-size: 24rpx;" @click="data_each.value.st = [data_each.value.st[0]]; set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());delay_fresh(200);">关指令查</button>
+											<button v-else class="btn btn-secondary" style="background-color:darkslateblue;height: 50rpx;font-size: 24rpx;" @click="data_each.value.st = [data_each.value.st[0]==''?0:data_each.value.st[0], 1.0, 0]; set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());delay_fresh(200);">开指令查</button>
+											<span v-html="'&nbsp;'"></span>
+											<button v-if="data_each.value.st[1] != null && data_each.value.st[2]!=1" class="btn btn-secondary" style="background-color:darkslateblue;height: 50rpx;font-size: 24rpx;" @click="data_each.value.st[2] = 1; set_onenet_http(key.substr(1,), 'st', data_each.value.st.join()); delay_fresh(200);">下发定位指令</button>
+											<button v-else-if="data_each.value.st[1] != null" class="btn btn-secondary" style="background-color:#532222;height: 50rpx;font-size: 24rpx;">刷新等待</button>
+											<span v-html="'&nbsp;'"></span>
+											<button v-if="data_each.value.m_conf[0] != null && data_each.value.m_conf[0] != '0'" class="btn btn-secondary" style="background-color: #532222;height: 50rpx;font-size: 24rpx;" @click="data_each.value.m_conf = ['0', '0']; set_onenet_http(key.substr(1,), 'm_conf', data_each.value.m_conf.join());delay_fresh(200);">关闭震动开机</button>
+											<button v-else class="btn btn-secondary" style="background-color:darkslateblue;height: 50rpx;font-size: 24rpx;" @click="data_each.value.m_conf = ['1', data_each.value.m_conf[0]!='1'?'0':data_each.value.m_conf[1]]; set_onenet_http(key.substr(1,), 'm_conf', data_each.value.m_conf.join());delay_fresh(200);">开启震动开机</button>
+										</div>
+										
+										
 										</view>
 									</div>
 								</div>
