@@ -209,6 +209,7 @@ export default {
 				console.log('触发下拉刷新了');
 				this.fresh();
 				uni.stopPullDownRefresh();
+				this.$forceUpdate(); // 异步后拉到数据后刷新
 			},
 			getDefaultDict(input_dict, input_key, default_val=''){
 				return input_dict[input_key]?input_dict[input_key]:(default_val?default_val:input_key);
