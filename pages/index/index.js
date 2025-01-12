@@ -1407,6 +1407,13 @@ export default {
 				
 				return parseInt((100/(arr.length)) * left);
 			},
+			
+			change_working_mode(event, device_id, st) {
+				st[3] = event.detail.value;
+				console.log(st);
+				this.set_onenet_http(device_id, 'st', st.join());
+				this.check_main();
+			}
 	}
 
 }

@@ -198,6 +198,25 @@
 											<button class="btn btn-secondary" style="margin-right: auto;width: 35%; background-color: bisque;color:black; height: 50rpx;font-size: 24rpx;" @click="set_onenet_http(key.substr(1,), 'm_conf', data_each.value.m_conf.join());">保存震动配置</button>
 										</div>
 										
+										<div v-if="each['device_type'] == 5" class="flex" style="display: flex; align-items: center; margin-bottom: 10px; text-align: center; margin-top: 10px;  ">
+											<div v-if="data_each.value.st[3] == null || data_each.value.st[3] == '0'">
+												<span style="width: 50%; white-space: pre-wrap;">当前定位模式:GPS优先</span>
+											</div>
+											<div v-else-if="data_each.value.st[3] == '1'">
+												<span style="width: 50%; white-space: pre-wrap;">当前定位模式:混合模式优先</span>
+											</div>
+											<div v-else>
+												<span style="width: 50%; white-space: pre-wrap;">当前定位模式:仅混合模式</span>
+											</div>
+										</div>										
+										<div v-if="each['device_type'] == 5" class="flex" style="display: flex; align-items: center; margin-bottom: 10px; text-align: center; margin-top: 10px;">
+											<radio-group v-model="data_each.value.st[3]" @change="(e) => change_working_mode(e, key.substr(1,), data_each.value.st)" style="display: flex; align-items: flex-start; flex-direction: row;">
+												<radio value="0"  />GPS优先
+												<radio value="1"  />混合模式优先
+												<radio value="2"  />仅混合模式
+											</radio-group>
+										</div>
+										
 										<div v-if="each['device_type'] == 5" class="flex" style="white-space: pre-wrap; text-align:center;vertical-align:middel;">
 											<button v-if="data_each.value.st[1] != null" class="btn btn-secondary" style="background-color: #532222;height: 50rpx;font-size: 24rpx;" @click="data_each.value.st = [data_each.value.st[0]]; set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());delay_fresh(200);">关指令查</button>
 											<button v-else class="btn btn-secondary" style="background-color:darkslateblue;height: 50rpx;font-size: 24rpx;" @click="data_each.value.st = [data_each.value.st[0]==''?0:data_each.value.st[0], 1.0, 0]; set_onenet_http(key.substr(1,), 'st', data_each.value.st.join());delay_fresh(200);">开指令查</button>
