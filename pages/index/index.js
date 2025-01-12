@@ -172,6 +172,19 @@ export default {
 				// 在页面销毁后，清除计时器
 				this.clear();
 			},
+			debug(){
+				console.log("debug");
+				uni.request({
+					url: "https://worker.moyudage.top/test",
+					method:'GET',//请求方式  或GET，必须为大写
+					success: res => {
+						uni.showToast({
+							title: res['data']['status'],
+							icon: "none"
+						})
+					}
+				});
+			},
 			/////////////////////////////////////
 			//操作--button1
 			change_seen_id(new_seen_id){
@@ -195,7 +208,9 @@ export default {
 				}else if(that.seen_id == '2'){
 					that.check_main(2);
 				}
-				// this.debug();
+				if(that.seen_id == '3'){
+					that.debug();
+				}
 			},
 			restore_seen_id(e){
 				if(uni.getStorageSync("seen_id")){
