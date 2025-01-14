@@ -224,11 +224,27 @@ export default {
 				console.log('触发下拉刷新了');
 				this.fresh();
 				uni.stopPullDownRefresh();
+				uni.showToast({
+					title: "刷新成功",
+					icon: "none"
+				})
 				this.$forceUpdate(); // 异步后拉到数据后刷新
 			},
 			getDefaultDict(input_dict, input_key, default_val=''){
 				return input_dict[input_key]?input_dict[input_key]:(default_val?default_val:input_key);
 			},
+			mergeDeep(target, source) {
+				for (const key in source) {
+					if (source[key] instanceof Object && key in target) {
+						Object.assign(source[key], this.mergeDeep(target[key], source[key]));
+					}
+				}
+				// Join `target` and modified `source`
+				Object.assign(target || {}, source);
+				return target;
+			},
+
+
 			check_main(seen_id = "") {
 				console.log("check once");
 				var that = this;
@@ -245,7 +261,7 @@ export default {
 					if (seen_id == 2){
 						for(var idx=0;idx<hid_usb_split.length;idx++){
 							temp_data["+"+hid_usb_split[idx]] = {
-								"status": "在线",
+								"status": ("+"+hid_usb_split[idx] in that.temp_data)?that.temp_data["+"+hid_usb_split[idx]]["status"]:"在线",
 								"datastreams": [],
 							}
 							if(that.product_id){
@@ -287,7 +303,7 @@ export default {
 							temp_data["+"+device_id_split[idx]] = {
 								"device_type": devices_type[idx],
 								"comments": comments_split[idx],
-								"status": "在线",
+								"status": ("+"+device_id_split[idx] in that.temp_data)?that.temp_data["+"+device_id_split[idx]]["status"]:"在线",
 								"datastreams": [],
 							};
 							if(that.product_id){
@@ -506,7 +522,11 @@ export default {
 						}
 
 					}
-					that.temp_data = temp_data;
+					if(Object.keys(that.temp_data).length === 0) {
+						that.temp_data = temp_data;
+					} else {
+						that.mergeDeep(that.temp_data, temp_data);
+					}
 
 				}catch(e){
 					console.log("check main error", e);
